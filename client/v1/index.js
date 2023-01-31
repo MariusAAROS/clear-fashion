@@ -109,7 +109,13 @@ console.log(fitleredMarkerplace);
 
 // 🎯 TODO 7: Average price
 // 1. Determine the average price of the marketplace
+function averagePrice(data){
+  return (data.reduce((sum, current) => sum + current.price, 0) / data.length);
+}
+const avgMarketplace = averagePrice(marketplace);
+
 // 2. Log the average
+console.log(avgMarketplace)
 
 /**
  * 🏎
