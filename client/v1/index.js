@@ -73,14 +73,23 @@ function sortByPrice(data) {
 }
 console.log(sortByPrice(marketplace));
 
-
-
 // 2. Create a variable and assign it the list of products by price from lowest to highest
+const lowestToHighest = sortByPrice(marketplace).reverse()
+
 // 3. Log the variable
+console.log(lowestToHighest);
 
 // 🎯 TODO 5: Sort by date
 // 1. Create a function to sort the marketplace objects by products date
+function sortByDate(data) {
+  data.sort((a, b) => b.released - a.released);
+  return data
+}
+const marketplaceByDate = sortByDate(marketplace).reverse();
+
 // 2. Create a variable and assign it the list of products by date from recent to old
+console.log(marketplaceByDate);
+
 // 3. Log the variable
 
 // 🎯 TODO 6: Filter a specific price range
