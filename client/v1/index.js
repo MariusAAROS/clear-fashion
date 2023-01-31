@@ -33,7 +33,10 @@ console.log(MY_FAVORITE_BRANDS[0]);
 // 0. I have 3 favorite brands stored in MY_FAVORITE_BRANDS variable
 // 1. Create a new variable and assign it the link of the cheapest t-shirt
 // I can find on these e-shops
+const cheapestTshirt = "https://www.faguo-store.com/fr/vetements/7606-arcy-t-shirt-en-coton-recycle-kaki.html";
+
 // 2. Log the variable
+console.log(cheapestTshirt);
 
 /**
  * 👕
@@ -46,15 +49,32 @@ console.log(MY_FAVORITE_BRANDS[0]);
 
 // 🎯 TODO 2: Number of products
 // 1. Create a variable and assign it the number of products
+console.log(marketplace);
+const sizeMarketPlace = marketplace.length;
+
 // 2. Log the variable
+console.log(sizeMarketPlace);
 
 // 🎯 TODO 3: Brands name
 // 1. Create a variable and assign it the list of brands name only
+const brandNames = marketplace.map(function(A) {return A["brand"]});
+
 // 2. Log the variable
+console.log(brandNames);
+
 // 3. Log how many brands we have
+console.log(brandNames.length)
 
 // 🎯 TODO 4: Sort by price
 // 1. Create a function to sort the marketplace products by price
+function sortByPrice(data) {
+  data.sort((a, b) => b.price - a.price);
+  return data
+}
+console.log(sortByPrice(marketplace));
+
+
+
 // 2. Create a variable and assign it the list of products by price from lowest to highest
 // 3. Log the variable
 
