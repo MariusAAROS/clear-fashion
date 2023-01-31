@@ -82,15 +82,20 @@ console.log(lowestToHighest);
 // 🎯 TODO 5: Sort by date
 // 1. Create a function to sort the marketplace objects by products date
 function sortByDate(data) {
-  data.sort((a, b) => b.released - a.released);
-  return data
+  data.sort((a, b) => {
+    const dateA = new Date(a.released);
+    const dateB = new Date(b.released);
+    return dateB - dateA;
+  });
+  return data;
 }
-const marketplaceByDate = sortByDate(marketplace).reverse();
 
 // 2. Create a variable and assign it the list of products by date from recent to old
-console.log(marketplaceByDate);
+const marketplaceByDate = sortByDate(marketplace).reverse();
 
 // 3. Log the variable
+console.log("test")
+console.log(marketplaceByDate);
 
 // 🎯 TODO 6: Filter a specific price range
 // 1. Filter the list of products between 50€ and 100€
