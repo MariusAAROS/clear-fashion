@@ -99,7 +99,13 @@ console.log(marketplaceByDate);
 
 // 🎯 TODO 6: Filter a specific price range
 // 1. Filter the list of products between 50€ and 100€
+function checkPrice(data){
+  return data.price >= 50 && data.price <=100;
+}
+const fitleredMarkerplace = marketplace.filter(checkPrice);
+
 // 2. Log the list
+console.log(fitleredMarkerplace);
 
 // 🎯 TODO 7: Average price
 // 1. Determine the average price of the marketplace
