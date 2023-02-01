@@ -136,16 +136,47 @@ console.log(avgMarketplace)
 //   ....
 //   'brand-name-n': [{...}, {...}, ..., {...}],
 // };
-//
+
+function groupBy(list, keyGetter) {
+  const map = new Map();
+  list.forEach((item) => {
+       const key = keyGetter(item);
+       const collection = map.get(key);
+       if (!collection) {
+           map.set(key, [item]);
+       } else {
+           collection.push(item);
+       }
+  });
+  return map;
+}
+const brands = groupBy(marketplace, item => item.brand);
+
 // 2. Log the variable
+console.log(brands);
+
 // 3. Log the number of products by brands
+brands.forEach(function(item) {
+  console.log(item.length);
+})
 
 // 🎯 TODO 9: Sort by price for each brand
 // 1. For each brand, sort the products by price, from highest to lowest
+const sortedBrands = new Array();
+brands.forEach(function(item, index) {
+  sortedBrands[index] = sortByPrice(item);
+})
+
 // 2. Log the sort
+console.log(sortedBrands);
 
 // 🎯 TODO 10: Sort by date for each brand
 // 1. For each brand, sort the products by date, from old to recent
+const sortedBrandsByDate = new Array(3);
+brands.forEach(function(item, index) {
+  sortedBrands.push(sortByPrice(item));
+})
+
 // 2. Log the sort
 
 /**
