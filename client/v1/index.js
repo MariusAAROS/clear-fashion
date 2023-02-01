@@ -172,12 +172,13 @@ console.log(sortedBrands);
 
 // 🎯 TODO 10: Sort by date for each brand
 // 1. For each brand, sort the products by date, from old to recent
-const sortedBrandsByDate = new Array(3);
+const sortedBrandsByDate = new Array();
 brands.forEach(function(item, index) {
-  sortedBrands.push(sortByPrice(item));
+  sortedBrandsByDate[index] = sortByDate(item);
 })
 
 // 2. Log the sort
+console.log(sortedBrandsByDate);
 
 /**
  * 💶
@@ -189,6 +190,31 @@ brands.forEach(function(item, index) {
 // 🎯 TODO 11: Compute the p90 price value
 // 1. Compute the p90 price value of each brand
 // The p90 value (90th percentile) is the lower value expected to be exceeded in 90% of the products
+
+function percentile(sortedArr, p, prop) {
+  const sortedValues = sortedArr.map(function(item) {
+    return item[prop];
+  });
+  const index = (p / 100) * sortedValues.length;
+  if (Math.floor(index) === index) {
+    return (sortedValues[index - 1] + sortedValues[index]) / 2;
+  }
+  return sortedValues[Math.floor(index)];
+}
+
+console.log("test");
+
+for (const [brand, value] of sortedBrands.entries()) {
+  const p90 = percentile(value, 90, "price");
+  console.log("%s p90: %f", brand, p90);
+  console.log("test");
+};
+/*
+sortedBrands.forEach(function(item) {
+  const p90 = percentile(item, 90, "price");
+  console.log(p90);
+  console.log("test");
+})*/
 
 /**
  * 🧥
