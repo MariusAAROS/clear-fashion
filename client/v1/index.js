@@ -57,8 +57,8 @@ console.log(sizeMarketPlace);
 
 // 🎯 TODO 3: Brands name
 // 1. Create a variable and assign it the list of brands name only
-const brandNames = marketplace.map(function(A) {return A["brand"]});
-
+var brandNames = marketplace.map(function(A) {return A["brand"]});
+brandNames = [...new Set(brandNames)];
 // 2. Log the variable
 console.log(brandNames);
 
@@ -396,18 +396,86 @@ const COTELE_PARIS = [
 // 🎯 TODO 1: New released products
 // // 1. Log if we have new products only (true or false)
 // // A new product is a product `released` less than 2 weeks.
+//COTELE_PARIS
+function dateDiff(date1, date2) {
+  var diff = {}
+  var tmp = new Date(date2) - new Date(date1);
+
+  tmp = Math.floor(tmp/1000);
+  diff.sec = tmp % 60;
+
+  tmp = Math.floor((tmp-diff.sec)/60);
+  diff.min = tmp % 60;
+
+  tmp = Math.floor((tmp-diff.min)/60);
+  diff.hour = tmp % 24;
+
+  tmp = Math.floor((tmp-diff.hour)/24);
+  diff.day = tmp;
+
+  return diff;
+}
+console.log("New products only :");
+COTELE_PARIS.forEach((value) => {
+  var curDate = new Date();
+  curDate.getTime();
+  var nDays = dateDiff(value.released, curDate);
+  if (nDays.day <= 14) {
+    console.log(value);
+  }
+})
 
 // 🎯 TODO 2: Reasonable price
 // // 1. Log if coteleparis is a reasonable price shop (true or false)
 // // A reasonable price if all the products are less than 100€
+var n = 0;
+function isReasonableBrand(data) {
+  var isReasonable = true;
+  data.forEach((value) => {
+    if (value.price > 100) {
+      isReasonable = false;
+      return isReasonable;
+    }
+  })
+  return isReasonable;
+}
+
+console.log("Is Cotele Paris a reasonable brand: ");
+console.log(isReasonableBrand(COTELE_PARIS));
+
 
 // 🎯 TODO 3: Find a specific product
 // 1. Find the product with the uuid `2b9a47e3-ed73-52f6-8b91-379e9c8e526c`
+function findUUID(data, uuid) {
+  var matched;
+  data.forEach((value) => {
+    if (value.uuid == uuid) {
+      matched = value;
+    }
+  })
+  return matched;
+}
+
 // 2. Log the product
+console.log("Product search by UUID :");
+console.log(findUUID(COTELE_PARIS, '2b9a47e3-ed73-52f6-8b91-379e9c8e526c'));
+
 
 // 🎯 TODO 4: Delete a specific product
 // 1. Delete the product with the uuid `2b9a47e3-ed73-52f6-8b91-379e9c8e526c`
+function deleteUUID(data, uuid) {
+  data.forEach((value, i) => {
+    if (value.uuid == uuid) {
+      data.splice(i, 1);
+    }
+  })
+}
+
+deleteUUID(COTELE_PARIS, '2b9a47e3-ed73-52f6-8b91-379e9c8e526c');
+
 // 2. Log the new list of product
+console.log("Cotele List with deleted element :");
+console.log(COTELE_PARIS);
 
 // 🎯 TODO 5: Save the favorite product
 // We declare and assign a variable called `blueJacket`
