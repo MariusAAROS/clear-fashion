@@ -94,7 +94,6 @@ function sortByDate(data) {
 const marketplaceByDate = sortByDate(marketplace).reverse();
 
 // 3. Log the variable
-console.log("test")
 console.log(marketplaceByDate);
 
 // 🎯 TODO 6: Filter a specific price range
@@ -115,7 +114,7 @@ function averagePrice(data){
 const avgMarketplace = averagePrice(marketplace);
 
 // 2. Log the average
-console.log(avgMarketplace)
+console.log(avgMarketplace);
 
 /**
  * 🏎
@@ -191,30 +190,20 @@ console.log(sortedBrandsByDate);
 // 1. Compute the p90 price value of each brand
 // The p90 value (90th percentile) is the lower value expected to be exceeded in 90% of the products
 
-function percentile(sortedArr, p, prop) {
-  const sortedValues = sortedArr.map(function(item) {
-    return item[prop];
-  });
-  const index = (p / 100) * sortedValues.length;
-  if (Math.floor(index) === index) {
-    return (sortedValues[index - 1] + sortedValues[index]) / 2;
+const quantile = (sorted, q, attribute) => {
+  const pos = (sorted.length - 1) * q;
+  const base = Math.floor(pos);
+  const rest = pos - base;
+  if (sorted[base + 1][attribute] !== undefined) {
+      return sorted[base][attribute] + rest * (sorted[base + 1][attribute] - sorted[base][attribute]);
+  } else {
+      return sorted[base][attribute];
   }
-  return sortedValues[Math.floor(index)];
-}
-
-console.log("test");
-
-for (const [brand, value] of sortedBrands.entries()) {
-  const p90 = percentile(value, 90, "price");
-  console.log("%s p90: %f", brand, p90);
-  console.log("test");
 };
-/*
-sortedBrands.forEach(function(item) {
-  const p90 = percentile(item, 90, "price");
-  console.log(p90);
-  console.log("test");
-})*/
+console.log("90th percentile of each brand :");
+for (const [key, value] of Object.entries(sortedBrands)) {
+  console.log(quantile(value, 0.9, "price"));
+}
 
 /**
  * 🧥
