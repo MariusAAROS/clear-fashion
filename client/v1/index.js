@@ -519,6 +519,7 @@ blueJacket = {
 };
 
 // 3. Update `jacket` property with `favorite` to true WITHOUT changing blueJacket properties
+jacket = JSON.parse(JSON.stringify(blueJacket));
 jacket.favorite = true;
 console.log("Blue Jacket : ", blueJacket);
 console.log("Jacket : ", jacket);
@@ -532,14 +533,10 @@ console.log("Jacket : ", jacket);
 
 // 🎯 LAST TODO: Save in localStorage
 // 1. Save MY_FAVORITE_BRANDS in the localStorage
-
-const arrayToTxtFile = require('array-to-txt-file')
-arrayToTxtFile(MY_FAVORITE_BRANDS, "D:/COURS/A4/S8 - ESILV/Web Architecture Applications/TP1/clear-fashion/client/v1/my_favorite_brands.txt", err => {
-    if(err) {
-      console.error(err)
-      return
-    }
-    console.log('Successfully wrote to txt file')
-})
+console.log("Initial content of the variable localStorage : ");
+console.log(localStorage);
+localStorage.setItem('my_favorite_brands', JSON.parse(JSON.stringify(MY_FAVORITE_BRANDS)));
 
 // 2. log the localStorage
+console.log("Content after update of the variable localStorage : ");
+console.log(localStorage);
