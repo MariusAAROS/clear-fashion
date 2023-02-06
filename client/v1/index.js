@@ -498,7 +498,12 @@ let jacket = blueJacket;
 jacket.favorite = true;
 
 // 1. Log `blueJacket` and `jacket` variables
+console.log("Blue Jacket : ", blueJacket);
+console.log("Jacket : ", jacket);
+
 // 2. What do you notice?
+//They both have the property favorite set to true. It is due to the fact that writing 'let jacket = bluejacket' only store blue jacket's pointer in jacket. 
+//Thus, both variables point on the same value.
 
 // we make a new assignment again
 blueJacket = {
@@ -514,6 +519,10 @@ blueJacket = {
 };
 
 // 3. Update `jacket` property with `favorite` to true WITHOUT changing blueJacket properties
+jacket.favorite = true;
+console.log("Blue Jacket : ", blueJacket);
+console.log("Jacket : ", jacket);
+//This time they are independant variables because blueJacket was reasigned to a different object (ie. pointer).
 
 /**
  * 🎬
