@@ -532,4 +532,14 @@ console.log("Jacket : ", jacket);
 
 // 🎯 LAST TODO: Save in localStorage
 // 1. Save MY_FAVORITE_BRANDS in the localStorage
+
+const arrayToTxtFile = require('array-to-txt-file')
+arrayToTxtFile(MY_FAVORITE_BRANDS, "D:/COURS/A4/S8 - ESILV/Web Architecture Applications/TP1/clear-fashion/client/v1/my_favorite_brands.txt", err => {
+    if(err) {
+      console.error(err)
+      return
+    }
+    console.log('Successfully wrote to txt file')
+})
+
 // 2. log the localStorage
