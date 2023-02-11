@@ -116,8 +116,9 @@ const renderIndicators = pagination => {
  */
 const renderBrands = products => {
   var brandNames = products.map(function(A) {return A["brand"]});
-  brandNames = [...new Set(brandNames)];
-  const lengthProducts = products.length;
+  brandNames = Array.from([...new Set(brandNames)]);
+  brandNames.splice(0, 0, "None");
+  //const lengthProducts = products.length;
   const options = Array.from(
     brandNames,
     (value) => `<option value="${value}">${value}</option>`
