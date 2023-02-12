@@ -30,7 +30,9 @@ const selectBrand = document.querySelector('#brand-select');
 const selectSort = document.querySelector('#sort-select');
 const selectFilterReasonablePrice = document.querySelector('#filterRPrice-select');
 const selectFilterRecentlyReleased = document.querySelector('#filterRReleased-select');
+
 const spanNbBrands = document.querySelector('#nbBrands');
+//const spanNbNewProducts =
 
 /**
  * Set global value
@@ -144,6 +146,15 @@ const quantile = (sorted, q, attribute) => {
   } else {
       return sorted[base][attribute];
   }
+};
+
+/**
+ * Finds the number of new products
+ */
+async function nbNewProducts(currentPagination) {
+  const allProducts = await fetchProducts(1, currentPagination.count);
+  const countNewProds = allProducts.result.filter(checkDate).length;
+  return countNewProds;
 };
 
 /**
@@ -282,6 +293,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const brands = await fetchBrands();
   renderBrands(brands);
 
+  const nbNewProds = await nbNewProducts(currentPagination);
+  document.getElementById('nbNewProducts').innerHTML = nbNewProds;
   render(currentProducts, currentPagination);
 });
 
