@@ -181,7 +181,7 @@ selectBrand.addEventListener('change', async (event) => {
   render(currentProducts, currentPagination);
 });
 */
-
+/*
 selectBrand.addEventListener('change', async (event) => {
   
   const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
@@ -190,4 +190,15 @@ selectBrand.addEventListener('change', async (event) => {
   
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
+});
+*/
+selectBrand.addEventListener('change', (event) => {
+  let filteredProducts = [];
+  const selectedBrand = event.target.value;
+  if (selectedBrand !== "None") {
+    filteredProducts = currentProducts.filter(product => product.brand === selectedBrand);
+  } else {
+    filteredProducts = currentProducts;
+  }
+  renderProducts(filteredProducts);
 });
