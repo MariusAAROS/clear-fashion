@@ -66,6 +66,27 @@ const fetchProducts = async (page = 1, size = 12) => {
   }
 };
 
+async function fetchBrands() {
+  try {
+    const response = await fetch(
+      'https://clear-fashion-api.vercel.app/brands'
+    );
+    const body = await response.json();
+
+    if (body.success !== true) {
+      console.error(error);
+    }
+    else {
+      var brands = body.data.result;
+      const nbBrands = brands.length;
+      return brands;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 /**
  * Render list of products
  * @param  {Array} products
@@ -106,6 +127,24 @@ const renderPagination = pagination => {
 };
 
 /**
+ * Find the qth quantile of a sorted array
+ * @param {Array} sorted
+ * @param {Float} q
+ * @param {String} attribute
+ * @returns
+ */
+const quantile = (sorted, q, attribute) => {
+  const pos = (sorted.length - 1) * q;
+  const base = Math.floor(pos);
+  const rest = pos - base;
+  if (sorted[base + 1][attribute] !== undefined) {
+      return sorted[base][attribute] + rest * (sorted[base + 1][attribute] - sorted[base][attribute]);
+  } else {
+      return sorted[base][attribute];
+  }
+};
+
+/**
  * Render page selector
  * @param  {Object} pagination
  */
@@ -117,7 +156,8 @@ const renderIndicators = pagination => {
 /**
  * Render Brands selection
  */
-const renderBrands = products => {
+
+/*const renderBrands = products => {
   var brandNames = products.map(function(A) {return A["brand"]});
   brandNames = Array.from([...new Set(brandNames)]);
   brandNames.splice(0, 0, "None");
@@ -127,13 +167,21 @@ const renderBrands = products => {
     (value) => `<option value="${value}">${value}</option>`
   ).join('');
   selectBrand.innerHTML = options;
+};*/
+const renderBrands = brands => {
+  const options = Array.from(
+    brands,
+    (value) => `<option value="${value}">${value}</option>`
+  ).join('');
+
+  selectBrand.innerHTML = options;
 };
+
 
 const render = (products, pagination) => {
   renderProducts(products);
   renderPagination(pagination);
   renderIndicators(pagination);
-  renderBrands(products);
 };
 
 
@@ -228,6 +276,10 @@ selectPage.addEventListener('change', async (event) => {
 document.addEventListener('DOMContentLoaded', async () => {
   const products = await fetchProducts();
   setCurrentProducts(products);
+  
+  const brands = await fetchBrands();
+  renderBrands(brands);
+
   render(currentProducts, currentPagination);
 });
 
@@ -242,8 +294,17 @@ selectBrand.addEventListener('change', (event) => {
   } else {
     filteredProducts = currentProducts;
   }
+  currentPagination.brand = event.target.value;
   renderProducts(filteredProducts);
 });
+/*
+selectBrand.addEventListener('change', async (event) => {
+  const products = await fetchProducts(1, currentPagination.pageCount);
+
+  setCurrentProducts(products);
+  render(currentProducts, currentPagination);
+});
+*/
 
 /**
  * Event listener for filtering by reasonable price
@@ -251,6 +312,7 @@ selectBrand.addEventListener('change', (event) => {
 selectFilterReasonablePrice.addEventListener('click', () => {
   let filteredProducts = [];
   filteredProducts = currentProducts.filter(checkPrice);
+  //setCurrentProducts(currentProducts, currentPagination);
   renderProducts(filteredProducts);
 });
 
@@ -260,6 +322,7 @@ selectFilterReasonablePrice.addEventListener('click', () => {
 selectFilterRecentlyReleased.addEventListener('click', () => {
   let filteredProducts = [];
   filteredProducts = currentProducts.filter(checkDate);
+  //setCurrentProducts(currentProducts, currentPagination);
   renderProducts(filteredProducts);
 })
 
@@ -280,5 +343,6 @@ selectSort.addEventListener('change', (event) => {
   else if (event.target.value === 'price-desc'){
     sortedProducts = sortByPrice(currentProducts);
   }
+  //setCurrentProducts(currentProducts, currentPagination);
   renderProducts(sortedProducts);
 });
