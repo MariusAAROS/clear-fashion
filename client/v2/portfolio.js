@@ -30,6 +30,7 @@ const selectBrand = document.querySelector('#brand-select');
 const selectSort = document.querySelector('#sort-select');
 const selectFilterReasonablePrice = document.querySelector('#filterRPrice-select');
 const selectFilterRecentlyReleased = document.querySelector('#filterRReleased-select');
+const spanNbBrands = document.querySelector('#nbBrands');
 
 /**
  * Set global value
@@ -79,6 +80,7 @@ async function fetchBrands() {
     else {
       var brands = body.data.result;
       const nbBrands = brands.length;
+      brands.splice(0, 0, "None");
       return brands;
     }
   } catch (error) {
@@ -173,7 +175,7 @@ const renderBrands = brands => {
     brands,
     (value) => `<option value="${value}">${value}</option>`
   ).join('');
-
+  document.getElementById('nbBrands').innerHTML = brands.length;
   selectBrand.innerHTML = options;
 };
 
