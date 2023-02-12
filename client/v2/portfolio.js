@@ -134,7 +134,7 @@ const render = (products, pagination) => {
 };
 
 //---- Usefull functions ----//
-function checkBrand(data, brand){
+function checkBrand(brand, data){
   return data.brand == brand;
 }
 
@@ -163,7 +163,31 @@ document.addEventListener('DOMContentLoaded', async () => {
   render(currentProducts, currentPagination);
 });
 
+
+/**
+ * Select brands to display
+ */
+/*
 selectBrand.addEventListener('change', async (event) => {
-  setCurrentProducts(products.filter(checkBrand(products.target.value)));
+  if(event.target.value == "None"){
+    const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
+  }
+  else{
+    const products = await fetchProducts(1, currentPagination.count);
+    products.result = products.result.filter(checkBrand.bind(this, event.target.value));
+    products.meta.count = products.result.length;
+  }
+  setCurrentProducts(products);
+  render(currentProducts, currentPagination);
+});
+*/
+
+selectBrand.addEventListener('change', async (event) => {
+  
+  const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
+  products.result = products.result.filter(checkBrand.bind(this, event.target.value));
+  products.meta.count = products.result.length;
+  
+  setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });
