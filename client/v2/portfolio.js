@@ -27,6 +27,7 @@ const selectPage = document.querySelector('#page-select');
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
 const selectBrand = document.querySelector('#brand-select');
+const selectSort = document.querySelector('#sort-select')
 
 /**
  * Set global value
@@ -112,7 +113,7 @@ const renderIndicators = pagination => {
 };
 
 /**
- * Rendre Brands selection
+ * Render Brands selection
  */
 const renderBrands = products => {
   var brandNames = products.map(function(A) {return A["brand"]});
@@ -133,9 +134,38 @@ const render = (products, pagination) => {
   renderBrands(products);
 };
 
-//---- Usefull functions ----//
+/**
+ * Filter function for brands
+ * @param {String} brand 
+ * @param {Array} data 
+ * @returns 
+ */
 function checkBrand(brand, data){
   return data.brand == brand;
+}
+
+/**
+ * Sorts products by date
+ * @param {Array} data 
+ * @returns 
+ */
+function sortByDate(data) {
+  data.sort((a, b) => {
+    const dateA = new Date(a.released);
+    const dateB = new Date(b.released);
+    return dateB - dateA;
+  });
+  return data;
+}
+
+/**
+ * Sorts products by price
+ * @param {Array} data 
+ * @returns 
+ */
+function sortByPrice(data) {
+  data.sort((a, b) => b.price - a.price);
+  return data
 }
 
 /**
@@ -163,35 +193,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   render(currentProducts, currentPagination);
 });
 
-
 /**
- * Select brands to display
+ * Event listener for brands filtering
  */
-/*
-selectBrand.addEventListener('change', async (event) => {
-  if(event.target.value == "None"){
-    const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
-  }
-  else{
-    const products = await fetchProducts(1, currentPagination.count);
-    products.result = products.result.filter(checkBrand.bind(this, event.target.value));
-    products.meta.count = products.result.length;
-  }
-  setCurrentProducts(products);
-  render(currentProducts, currentPagination);
-});
-*/
-/*
-selectBrand.addEventListener('change', async (event) => {
-  
-  const products = await fetchProducts(currentPagination.currentPage, currentPagination.pageSize);
-  products.result = products.result.filter(checkBrand.bind(this, event.target.value));
-  products.meta.count = products.result.length;
-  
-  setCurrentProducts(products);
-  render(currentProducts, currentPagination);
-});
-*/
 selectBrand.addEventListener('change', (event) => {
   let filteredProducts = [];
   const selectedBrand = event.target.value;
@@ -201,4 +205,24 @@ selectBrand.addEventListener('change', (event) => {
     filteredProducts = currentProducts;
   }
   renderProducts(filteredProducts);
+});
+
+/**
+ * Event listener for sorting
+ */
+selectSort.addEventListener('change', (event) => {
+  var sortedProducts;
+  if (event.target.value === 'date-desc'){
+    sortedProducts = sortByDate(currentProducts).reverse();
+  }
+  else if (event.target.value === 'date-asc'){
+    sortedProducts = sortByDate(currentProducts);
+  }
+  else if (event.target.value === 'price-asc'){
+    sortedProducts = sortByPrice(currentProducts).reverse();
+  }
+  else if (event.target.value === 'price-desc'){
+    sortedProducts = sortByPrice(currentProducts);
+  }
+  renderProducts(sortedProducts);
 });
