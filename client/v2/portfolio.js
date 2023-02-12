@@ -27,7 +27,9 @@ const selectPage = document.querySelector('#page-select');
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
 const selectBrand = document.querySelector('#brand-select');
-const selectSort = document.querySelector('#sort-select')
+const selectSort = document.querySelector('#sort-select');
+const selectFilterReasonablePrice = document.querySelector('#filterRPrice-select');
+const selectFilterRecentlyReleased = document.querySelector('#filterRReleased-select');
 
 /**
  * Set global value
@@ -134,14 +136,14 @@ const render = (products, pagination) => {
   renderBrands(products);
 };
 
+
 /**
- * Filter function for brands
- * @param {String} brand 
+ * Filters products by reasonable price
  * @param {Array} data 
  * @returns 
  */
-function checkBrand(brand, data){
-  return data.brand == brand;
+function checkPrice(data){
+  return data.price <= 50;
 }
 
 /**
@@ -204,6 +206,15 @@ selectBrand.addEventListener('change', (event) => {
   } else {
     filteredProducts = currentProducts;
   }
+  renderProducts(filteredProducts);
+});
+
+/**
+ * Event listener for filtering by reasonable price
+ */
+selectFilterReasonablePrice.addEventListener('click', () => {
+  let filteredProducts = [];
+  filteredProducts = currentProducts.filter(checkPrice);
   renderProducts(filteredProducts);
 });
 
