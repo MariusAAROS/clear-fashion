@@ -147,6 +147,42 @@ function checkPrice(data){
 }
 
 /**
+ * Calculates the difference between two dates
+ * @param {String} date1 
+ * @param {String} date2 
+ * @returns 
+ */
+function dateDiff(date1, date2) {
+  var diff = {}
+  var tmp = new Date(date2) - new Date(date1);
+
+  tmp = Math.floor(tmp/1000);
+  diff.sec = tmp % 60;
+
+  tmp = Math.floor((tmp-diff.sec)/60);
+  diff.min = tmp % 60;
+
+  tmp = Math.floor((tmp-diff.min)/60);
+  diff.hour = tmp % 24;
+
+  tmp = Math.floor((tmp-diff.hour)/24);
+  diff.day = tmp;
+
+  return diff;
+}
+
+/**
+ * Filters products by recent release
+ * @param {Array} date 
+ */
+function checkDate(data){
+  var curDate = new Date();
+  curDate.getTime();
+  var nDays = dateDiff(data.released, curDate);
+  return nDays.day <= 14;
+}
+
+/**
  * Sorts products by date
  * @param {Array} data 
  * @returns 
@@ -217,6 +253,15 @@ selectFilterReasonablePrice.addEventListener('click', () => {
   filteredProducts = currentProducts.filter(checkPrice);
   renderProducts(filteredProducts);
 });
+
+/**
+ * Event listener for filtering by recently released
+ */
+selectFilterRecentlyReleased.addEventListener('click', () => {
+  let filteredProducts = [];
+  filteredProducts = currentProducts.filter(checkDate);
+  renderProducts(filteredProducts);
+})
 
 /**
  * Event listener for sorting
