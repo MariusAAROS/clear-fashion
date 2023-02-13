@@ -151,8 +151,7 @@ const quantile = (sorted, q, attribute) => {
 /**
  * Finds the number of new products
  */
-async function nbNewProducts(currentPagination) {
-  const allProducts = await fetchProducts(1, currentPagination.count);
+function nbNewProducts(allProducts, currentPagination) {
   const countNewProds = allProducts.result.filter(checkDate).length;
   return countNewProds;
 };
@@ -240,7 +239,7 @@ function checkDate(data){
   var curDate = new Date();
   curDate.getTime();
   var nDays = dateDiff(data.released, curDate);
-  return nDays.day <= 14;
+  return nDays.day <= 30;
 }
 
 /**
@@ -293,8 +292,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const brands = await fetchBrands();
   renderBrands(brands);
 
-  const nbNewProds = await nbNewProducts(currentPagination);
+  const allProducts = await fetchProducts(1, currentPagination.count);
+
+  const nbNewProds = nbNewProducts(allProducts, currentPagination);
   document.getElementById('nbNewProducts').innerHTML = nbNewProds;
+
+  const p50 = quantile(sortByDate(allProducts.result), 0.5, "price");
+  const p90 = quantile(sortByDate(allProducts.result), 0.9, "price");
+  const p95 = quantile(sortByDate(allProducts.result), 0.95, "price");
+
+  document.getElementById('p50').innerHTML = Math.round(p50*100)/100;
+  document.getElementById('p90').innerHTML = Math.round(p90*100)/100;
+  document.getElementById('p95').innerHTML = Math.round(p95*100)/100;
+
   render(currentProducts, currentPagination);
 });
 
