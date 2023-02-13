@@ -32,7 +32,9 @@ const selectFilterReasonablePrice = document.querySelector('#filterRPrice-select
 const selectFilterRecentlyReleased = document.querySelector('#filterRReleased-select');
 
 const spanNbBrands = document.querySelector('#nbBrands');
-//const spanNbNewProducts =
+
+var favoritesCheckBoxes;
+//var favoritesCheckBoxes = document.querySelectorAll('.star'); 
 
 /**
  * Set global value
@@ -106,7 +108,7 @@ const renderProducts = products => {
         <span>${product.brand}</span>
         <a href="${product.link}" target="_blank">${product.name}</a>
         <span>${product.price}</span>
-        <input id="cb${counter}}"class="star" type="checkbox" title="bookmark page">
+        <input id="cb${counter}" class="star" type="checkbox" title="bookmark page" checked>
       </div>
     `;
     })
@@ -287,7 +289,9 @@ function sortByPrice(data) {
 function createFavoriteList(pagination) {
   //var favorites = [...Array(pagination.count).keys()];
   var favorites = [];
-  localStorage.setItem('favorites', favorites);
+  if (localStorage.favorites === undefined){
+    localStorage.setItem('favorites', favorites);
+  }
 };
 
 /**
@@ -349,6 +353,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('lastRDate').innerHTML = lastReleaseDate(allProducts.result);
 
   render(currentProducts, currentPagination);
+
+  favoritesCheckBoxes = document.querySelectorAll('.star');
+  setupCheckBoxListeners(favoritesCheckBoxes);
+  createFavoriteList(currentPagination);
 });
 
 /**
@@ -414,3 +422,21 @@ selectSort.addEventListener('change', (event) => {
   //setCurrentProducts(currentProducts, currentPagination);
   renderProducts(sortedProducts);
 });
+
+/**
+ * Event listener for favorites selection
+ */
+function setupCheckBoxListeners(favoritesCheckBoxes) {
+  favoritesCheckBoxes.forEach(checkbox => {
+    checkbox.addEventListener('change', event => {
+      if (event.target.value === 'checked') {
+        const no = parseInt(checkbox.id.charAt(checkbox.id.length-1));
+        const element = currentProducts[no];
+        addToFavorite(element);
+      }
+      else {
+
+      }
+    });
+  });
+};
