@@ -149,6 +149,14 @@ const quantile = (sorted, q, attribute) => {
 };
 
 /**
+ * Finds last released product
+ */
+function lastReleaseDate(allProducts){
+  allProducts = sortByDate(allProducts);
+  return allProducts[0].released;
+};
+
+/**
  * Finds the number of new products
  */
 function nbNewProducts(allProducts, currentPagination) {
@@ -304,6 +312,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('p50').innerHTML = Math.round(p50*100)/100;
   document.getElementById('p90').innerHTML = Math.round(p90*100)/100;
   document.getElementById('p95').innerHTML = Math.round(p95*100)/100;
+
+  document.getElementById('lastRDate').innerHTML = lastReleaseDate(allProducts.result);
 
   render(currentProducts, currentPagination);
 });
