@@ -90,7 +90,6 @@ async function fetchBrands() {
   }
 };
 
-
 /**
  * Render list of products
  * @param  {Array} products
@@ -98,13 +97,16 @@ async function fetchBrands() {
 const renderProducts = products => {
   const fragment = document.createDocumentFragment();
   const div = document.createElement('div');
+  var counter = -1;
   const template = products
     .map(product => {
+      counter++;
       return `
       <div class="product" id=${product.uuid}>
         <span>${product.brand}</span>
         <a href="${product.link}" target="_blank">${product.name}</a>
         <span>${product.price}</span>
+        <input id="cb${counter}}"class="star" type="checkbox" title="bookmark page">
       </div>
     `;
     })
@@ -272,6 +274,37 @@ function sortByDate(data) {
 function sortByPrice(data) {
   data.sort((a, b) => b.price - a.price);
   return data
+}
+
+/**
+ * Favorites features
+ */
+
+/**
+ * Create the favorites list
+ * @param {Object} pagination 
+ */
+function createFavoriteList(pagination) {
+  //var favorites = [...Array(pagination.count).keys()];
+  var favorites = [];
+  localStorage.setItem('favorites', favorites);
+};
+
+/**
+ * Adds an element to favorites list
+ * @param {Object} element 
+ */
+function addToFavorite(element) {
+  localStorage.favorites.push(element);
+}
+
+/**
+ * Removes an element from favorites list
+ * @param {Object} element 
+ */
+function removeFavorite(element) {
+  n = 0; //il faut calculer la position de l'élément dans les favoris
+  localStorage.favorites.splice(n, 1);
 }
 
 /**
