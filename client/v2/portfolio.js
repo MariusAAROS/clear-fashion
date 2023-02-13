@@ -34,6 +34,7 @@ const selectFilterRecentlyReleased = document.querySelector('#filterRReleased-se
 const spanNbBrands = document.querySelector('#nbBrands');
 
 var favoritesCheckBoxes;
+var favorites;
 //var favoritesCheckBoxes = document.querySelectorAll('.star'); 
 
 /**
