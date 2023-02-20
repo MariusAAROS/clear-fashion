@@ -6,7 +6,7 @@ const circlesportswearbrand = require('./eshops/circlesportswearbrand');
 async function sandbox (eshop = 'https://www.dedicatedbrand.com/en/men/news', brandName = "dedicated") {
   try {
     console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
-    var product;
+    var products;
 
     switch (brandName) {
       case 'dedicated':
@@ -15,7 +15,7 @@ async function sandbox (eshop = 'https://www.dedicatedbrand.com/en/men/news', br
       case 'montlimart':
         products = await montlimartbrand.scrape(eshop);
         break;
-      case 'CircleSportswear':
+      case 'circle':
         products = await circlesportswearbrand.scrape(eshop);
         break;
     }

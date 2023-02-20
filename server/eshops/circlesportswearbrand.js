@@ -15,11 +15,13 @@ const parse = data => {
         .find('.full-unstyled-link')
         .text()
         .trim()
-        .replace(/\s/g, ' ');
+        .replace(/\s/g, ' ')
+        .split("   ")[0];
       const price = parseInt(
         $(element)
           .find('.money')
           .text()
+          .split("€")[1]
       );
 
       return {name, price};
