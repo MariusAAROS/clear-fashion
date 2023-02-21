@@ -6,7 +6,7 @@ const fs = require('fs');
 
 async function sandbox (eshop = 'None', brandName = "all") {
   try {
-    console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
+    console.log(`🕵️‍♀️ browsing ${eshop} eshop`);
     var products;
 
     switch (brandName) {
@@ -23,7 +23,11 @@ async function sandbox (eshop = 'None', brandName = "all") {
         const dedicatedUrl = "https://www.dedicatedbrand.com/en/men/news";
         const montlimartUrl = "https://www.montlimart.com/99-vetements";
         const circleUrl = "https://shop.circlesportswear.com/collections/collection-homme";
-        const [dedicated, montlimart, circle] = await Promise.all([sandbox(dedicatedUrl, 'dedicated'), sandbox(montlimartUrl, 'montlimart'), sandbox(circleUrl, 'circle')])
+        const [dedicated, montlimart, circle] = Promise.all([ await sandbox(dedicatedUrl, 'dedicated'), 
+                                                              await sandbox(montlimartUrl, 'montlimart'),
+                                                              await sandbox(circleUrl, 'circle')]).then((values)=> {
+                                                                return values;
+                                                                   });
         return [dedicated, montlimart, circle];
     }
     return products;
@@ -33,8 +37,39 @@ async function sandbox (eshop = 'None', brandName = "all") {
   }
 }
 
+async function scrapeBrand(eshop, brandName) {
+  console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
+  var products;
+
+    switch (brandName) {
+      case 'dedicated':
+        products = await dedicatedbrand.scrape(eshop);
+        break;
+      case 'montlimart':
+        products = await montlimartbrand.scrape(eshop);
+        break;
+      case 'circle':
+        products = await circlesportswearbrand.scrape(eshop);
+        break;
+}
+  return products;
+}
+
+async function scrapeAllBrands(eshops, brandNames) {
+  console.log('🕵️‍♀️ browsing all eshops');
+  var products = [];
+  for (let i = 0; i < eshops.length; i++) {
+    let temp = scrapeBrand(eshops[i], brandNames[i]);
+    await ShowResult(temp, allShops);
+    ToFile(temp, brandNames[i]);
+  }
+  return products
+}
+
+
+
 async function ShowResult(result, allBrands) {
-  if (allBrands == "false") {
+  if (allBrands === "false") {
     console.log(await result);
   }
   else {
@@ -44,19 +79,31 @@ async function ShowResult(result, allBrands) {
   }
 }
 
-async function ToFile(result) {
-  const toExport = JSON.stringify(await result);
-  fs.writeFileSync('D:/COURS/A4/S8 - ESILV/Web Architecture Applications/TP1/clear-fashion/server/ScrappingResult.txt', toExport);
+async function ToFile(result, filename = "output") {
+  const toExport = JSON.stringify(await result)
+  fs.writeFileSync(`D:/COURS/A4/S8/Web Architecture Applications/clear-fashion/server/${filename}.json`, toExport);
+   
+}
+
+async function scrapeEngine() {
+  const allShops = ["https://www.dedicatedbrand.com/en/men/news",
+                    "https://www.montlimart.com/99-vetements",
+                    "https://shop.circlesportswear.com/collections/collection-homme"];
+  const allNames = ["dedicated", 
+                    "montlimart",
+                    "circle"];
+  const all = await scrapeAllBrands(allShops, allNames);
+  //await ShowResult(all, allShops);
+  //await ToFile(all, allNames);
 }
 
 const [,, allShops, eshop, brandName] = process.argv;
 
 if(allShops === "false") {
-  const res = sandbox(eshop, brandName);
+  const res = scrapeBrand(eshop, brandName);
   ShowResult(res, allShops);
-  ToFile(res);
+  ToFile(res, brandName);
 }
 else {
-  const all = sandbox(eshop, brandName);
-  ShowResult(all, allShops);
+  scrapeEngine();
 }
