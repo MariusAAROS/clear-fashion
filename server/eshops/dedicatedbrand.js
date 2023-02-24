@@ -50,3 +50,21 @@ module.exports.scrape = async url => {
     return null;
   }
 };
+
+async function sleep(ms) {
+  return new Promise(
+    resolve => setTimeout(resolve, ms)
+  );
+}
+
+module.exports.clickNextButton = async function () {
+  const current_count = document.querySelector('.js-items-current');
+  const total_count = document.querySelector('.js-allItems-total');
+  while (current_count < total_count) {
+    const button = document.querySelector("#js-nextButton");
+    button.click();
+    await sleep(1000);
+    current_count = document.querySelector('.js-items-current');
+  }
+}
+

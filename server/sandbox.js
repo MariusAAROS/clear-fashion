@@ -37,12 +37,19 @@ async function sandbox (eshop = 'None', brandName = "all") {
   }
 }
 
+function scrollToBottom() {
+  window.scrollTo(0, document.body.scrollHeight);
+}
+
+
+
 async function scrapeBrand(eshop, brandName) {
   console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
   var products;
 
     switch (brandName) {
       case 'dedicated':
+        //dedicatedbrand.clickNextButton();
         products = await dedicatedbrand.scrape(eshop);
         break;
       case 'montlimart':
@@ -66,8 +73,6 @@ async function scrapeAllBrands(eshops, brandNames) {
   return products
 }
 
-
-
 async function ShowResult(result, allBrands) {
   if (allBrands === "false") {
     console.log(await result);
@@ -81,7 +86,7 @@ async function ShowResult(result, allBrands) {
 
 async function ToFile(result, filename = "output") {
   const toExport = JSON.stringify(await result)
-  fs.writeFileSync(`D:/COURS/A4/S8/Web Architecture Applications/clear-fashion/server/${filename}.json`, toExport);
+  fs.writeFileSync(`D:/COURS/A4/S8/Web Architecture Applications/clear-fashion/server/exports/${filename}.json`, toExport);
    
 }
 
