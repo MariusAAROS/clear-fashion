@@ -63,10 +63,18 @@ module.exports.scrape = async function (url) {
 
       html = await BrowsingPage.content();
       page = cheerio.load(html);
+      
       current_count = parseInt(page('.js-items-current').text());
 
       currentHeight = await BrowsingPage.evaluate(() => document.body.scrollHeight);
+
+      try {
       await BrowsingPage.click("#js-nextButton");
+      }
+      catch (error) 
+      {
+        continue;
+      }
     }
     const result = await BrowsingPage.content();
     return parse(result);
