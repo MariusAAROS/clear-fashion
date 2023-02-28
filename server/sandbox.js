@@ -47,8 +47,8 @@ async function scrapeBrand(eshop, brandName) {
 
     switch (brandName) {
       case 'dedicated':
-        await dedicatedbrand.clickNextButton(eshop);
-        products = await dedicatedbrand.scrape(eshop);
+        products = await dedicatedbrand.clickNextButton(eshop);
+        //products = await dedicatedbrand.scrape(dedicatedHTML);
         break;
       case 'montlimart':
         products = await montlimartbrand.scrape(eshop);
