@@ -47,7 +47,7 @@ async function scrapeBrand(eshop, brandName) {
 
     switch (brandName) {
       case 'dedicated':
-        products = await dedicatedbrand.clickNextButton(eshop);
+        products = await dedicatedbrand.scrape(eshop);
         //products = await dedicatedbrand.scrape(dedicatedHTML);
         break;
       case 'montlimart':
@@ -93,7 +93,7 @@ async function ToFile(result, filename = "output") {
 }
 
 async function scrapeEngine() {
-  const allShops = ["https://www.dedicatedbrand.com/en/men/news",
+  const allShops = ["https://www.dedicatedbrand.com/en/men/all-men#page=16",
                     "https://www.montlimart.com/99-vetements",
                     "https://shop.circlesportswear.com/collections/collection-homme"];
   const allNames = ["dedicated",

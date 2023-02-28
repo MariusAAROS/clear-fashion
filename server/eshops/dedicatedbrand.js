@@ -29,44 +29,6 @@ const parse = data => {
     .get();
 };
 
-/**
- * Scrape all the products for a given url page
- * @param  {[type]}  url
- * @return {Array|null}
- */
-
-module.exports.scrape = async html => {
-  try {
-    return parse(html);
-
-    console.error(response);
-
-    return null;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
-
-/*module.exports.scrape = async url => {
-  try {
-    const response = await fetch(url);
-
-    if (response.ok) {
-      const body = await response.text();
-
-      return parse(body);
-    }
-
-    console.error(response);
-
-    return null;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
-*/
 
 async function sleep(ms) {
   return new Promise(
@@ -74,7 +36,8 @@ async function sleep(ms) {
   );
 }
 
-module.exports.clickNextButton = async function (url) {
+
+module.exports.scrape = async function (url) {
   try {
     const browser = await puppeteer.launch();
     const BrowsingPage = await browser.newPage();
@@ -85,24 +48,25 @@ module.exports.clickNextButton = async function (url) {
     var current_count = parseInt(page('.js-items-current').text());
     const total_count = parseInt(page('.js-allItems-total').text());
     console.log("total count: ", total_count);
-    console.log("current count: ", current_count);
-    var pos = 0;
     
     let previousHeight = 0;
     let currentHeight = await BrowsingPage.evaluate(() => document.body.scrollHeight);
 
-    while (previousHeight < currentHeight) {
+    while (previousHeight < currentHeight || current_count < total_count) {
       console.log("current count: ", current_count);
       previousHeight = currentHeight;
       await BrowsingPage.evaluate(() => {
         window.scrollTo(0, document.body.scrollHeight);
       });
-      await sleep(1000);
-      currentHeight = await BrowsingPage.evaluate(() => document.body.scrollHeight);
+      await BrowsingPage.waitForResponse(response => response.ok())
+      
 
       html = await BrowsingPage.content();
       page = cheerio.load(html);
       current_count = parseInt(page('.js-items-current').text());
+
+      currentHeight = await BrowsingPage.evaluate(() => document.body.scrollHeight);
+      await BrowsingPage.click("#js-nextButton");
     }
     const result = await BrowsingPage.content();
     return parse(result);
