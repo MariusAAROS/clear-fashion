@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
+const { response } = require('express');
 
 /**
  * Parse webpage e-shop
@@ -57,14 +58,51 @@ async function sleep(ms) {
   );
 }
 
-module.exports.clickNextButton = async function () {
-  const current_count = document.querySelector('.js-items-current');
-  const total_count = document.querySelector('.js-allItems-total');
-  while (current_count < total_count) {
-    const button = document.querySelector("#js-nextButton");
-    button.click();
-    await sleep(1000);
-    current_count = document.querySelector('.js-items-current');
+module.exports.clickNextButton = async function (url) {
+  try {
+    const response = await fetch(url);
+    if (response.ok) {
+      const body = await response.text();
+      const page = cheerio.load(body);
+      const current_count = page('.js-items-current');
+      const total_count = page('.js-allItems-total');
+      console.log("total count: ", total_count);
+      while (current_count < total_count) {
+        console.log("current count: ", current_count);
+        window.scrollTo(0, document.body.scrollHeight);
+        await sleep(1000);
+        current_count = page('.js-items-current');
+      }
+    }  
+  }
+  catch (error) {
+    console.error(error);
+    return null;
   }
 }
+
+/*
+module.exports.clickNextButton = async function (url) {
+  try {
+    const response = await fetch(url);
+    if (response.ok) {
+      const body = await response.text();
+      const page = cheerio.load(body);
+      const current_count = page('.js-items-current');
+      const total_count = page('.js-allItems-total');
+
+      while (current_count < total_count) {
+        const button = page("#js-nextButton");
+        button.click();
+        await sleep(1000);
+        current_count = page('.js-items-current');
+      }
+    }  
+  }
+  catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+*/
 

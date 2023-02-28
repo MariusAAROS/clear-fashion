@@ -41,15 +41,13 @@ function scrollToBottom() {
   window.scrollTo(0, document.body.scrollHeight);
 }
 
-
-
 async function scrapeBrand(eshop, brandName) {
   console.log(`🕵️‍♀️  browsing ${eshop} eshop`);
   var products;
 
     switch (brandName) {
       case 'dedicated':
-        //dedicatedbrand.clickNextButton();
+        //await dedicatedbrand.clickNextButton(eshop);
         products = await dedicatedbrand.scrape(eshop);
         break;
       case 'montlimart':
@@ -76,6 +74,7 @@ async function scrapeAllBrands(eshops, brandNames) {
 async function ShowResult(result, allBrands) {
   if (allBrands === "false") {
     console.log(await result);
+    console.log("Scrapped Items: ", Object.keys(await result).length);
   }
   else {
     for (let i=0; i<result.length; i++) {
@@ -84,17 +83,20 @@ async function ShowResult(result, allBrands) {
   }
 }
 
+async function CountScrapedItems(result) {
+  return result.length
+}
+
 async function ToFile(result, filename = "output") {
   const toExport = JSON.stringify(await result)
   fs.writeFileSync(`D:/COURS/A4/S8/Web Architecture Applications/clear-fashion/server/exports/${filename}.json`, toExport);
-   
 }
 
 async function scrapeEngine() {
   const allShops = ["https://www.dedicatedbrand.com/en/men/news",
                     "https://www.montlimart.com/99-vetements",
                     "https://shop.circlesportswear.com/collections/collection-homme"];
-  const allNames = ["dedicated", 
+  const allNames = ["dedicated",
                     "montlimart",
                     "circle"];
   const all = await scrapeAllBrands(allShops, allNames);
