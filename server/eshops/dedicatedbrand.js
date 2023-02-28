@@ -64,14 +64,15 @@ module.exports.clickNextButton = async function (url) {
     if (response.ok) {
       const body = await response.text();
       const page = cheerio.load(body);
-      const current_count = page('.js-items-current');
-      const total_count = page('.js-allItems-total');
+      var current_count = parseInt(page('.js-items-current').text());
+      const total_count = parseInt(page('.js-allItems-total').text());
+      console.log("current count: ", current_count);
       console.log("total count: ", total_count);
       while (current_count < total_count) {
         console.log("current count: ", current_count);
-        window.scrollTo(0, document.body.scrollHeight);
+        //window.scrollTo(0, document.body.scrollHeight);
         await sleep(1000);
-        current_count = page('.js-items-current');
+        current_count = parseInt(page('.js-items-current').text());
       }
     }  
   }
