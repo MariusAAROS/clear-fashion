@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 const { response } = require('express');
+const { scrape } = require('./montlimartbrand');
 
 /**
  * Parse webpage e-shop
@@ -36,6 +37,63 @@ async function sleep(ms) {
   );
 }
 
+async function awaitAll(obj) {
+  const promises = Object.values(obj); // convert object values into an array of promises
+  const results = await Promise.all(promises); // wait for all promises to resolve
+  const keys = Object.keys(obj); // get the original object keys
+  return keys.reduce((acc, key, index) => { // combine the results into a new object with original keys
+    acc[key] = results[index];
+    return acc;
+  }, {});
+}
+
+module.exports.navigate = async function () {
+  try {
+    const urls = ["https://www.dedicatedbrand.com/en/men/all-men", "https://www.dedicatedbrand.com/en/women/all-women"];
+    var products = new Object();
+    var temp;
+    for (let i = 0; i < urls.length; i++) {
+      console.log("Current url: ", urls[i]);
+      temp = this.scrape(urls[i]);
+      console.log(await temp);
+      products = Object.assign(products, await temp);
+    }
+    awaitAll(products);
+    console.log("Number of items: ", products.length);
+    const parsedProducts = Object.values(products);
+    return parsedProducts;
+  }
+  catch(error){
+    console.error(error);
+    return null;
+  }
+}
+
+/*
+module.exports.navigate = async function (url) {
+  try {
+    const browser = await puppeteer.launch();
+    const BrowsingPage = await browser.newPage();
+    await BrowsingPage.goto(url);
+    var html = await BrowsingPage.content();
+    var page = cheerio.load(html);
+    var sections = [page('.js-openSubMenu:contains("Men")'), '.js-openSubMenu:contains("Women")'];
+    var result = {};
+
+    sections.forEach(async function(element) {
+      console.log(element);
+      BrowsingPage.click(element);
+      Object.assign(result, await scrape(BrowsingPage.url));
+    })
+    return result;
+  }
+  catch(error){
+    console.error(error);
+    return null;
+  }
+}
+*/
+
 
 module.exports.scrape = async function (url) {
   try {
@@ -52,9 +110,13 @@ module.exports.scrape = async function (url) {
     let previousHeight = 0;
     let currentHeight = await BrowsingPage.evaluate(() => document.body.scrollHeight);
 
-    while (previousHeight < currentHeight || current_count < total_count) {
+    while (current_count < total_count) {
       console.log("current count: ", current_count);
       previousHeight = currentHeight;
+      if (current_count >= total_count)
+      {
+        break;
+      }
       await BrowsingPage.evaluate(() => {
         window.scrollTo(0, document.body.scrollHeight);
       });
