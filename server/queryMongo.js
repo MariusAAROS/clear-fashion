@@ -34,6 +34,19 @@ function FindAllItemsLowerThanPrice(price){
 }
 */
 
+function Query(filter = {}, options = {}){
+    const client = getClient();
+    client.connect(async () => {
+        const collection = client.db("clear-fashion").collection("products");
+        console.log()
+        const result = await collection.find(filter, options).toArray();
+        console.log(result);
+        console.log("#Items: ", result.length);
+    client.close();
+    return result;
+});
+}
+
 function FindAllBrandProduct(brandName = "dedicated") {
     const script = {brand: `${brandName}`};
     Query(script);
@@ -44,19 +57,17 @@ function FindAllItemsLowerThanPrice(price = 50) {
     Query(script);
 }
 
-
-function Query(script){
-    const client = getClient();
-    client.connect(async () => {
-        const collection = client.db("clear-fashion").collection("products");
-        console.log()
-        const result = await collection.find(script).toArray();
-        console.log(result);
-        console.log("#Items: ", result.length);
-    client.close();
-    return result;
-});
+function SortItemsByPrice(order= "desc") {
+    var script;
+    if(order === "desc") {
+        script = {sort: {price:-1}};
+    }
+    else {
+        script = {sort: {price:1}};
+    }
+    Query({}, script);
 }
 
 //FindAllBrandProduct("montlimart");
-FindAllItemsLowerThanPrice(50);
+//FindAllItemsLowerThanPrice(50);
+//SortItemsByPrice();
