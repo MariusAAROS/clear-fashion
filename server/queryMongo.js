@@ -68,6 +68,25 @@ function SortItemsByPrice(order= "desc") {
     Query({}, script);
 }
 
+function SortItemsByDate(order= "desc") {
+    var script;
+    if(order === "desc") {
+        script = {sort: {scrapDate:-1}};
+    }
+    else {
+        script = {sort: {scrapDate:1}};
+    }
+    Query({}, script);
+}
+
+function FindRecentProducts() {
+    let twoWeeksAgo = new Date(Date.now()-14*24*60*60*1000);
+    const script = {scrapDate: {$gte: twoWeeksAgo}};
+    Query({}, script);
+}
+
 //FindAllBrandProduct("montlimart");
 //FindAllItemsLowerThanPrice(50);
 //SortItemsByPrice();
+//SortItemsByDate();
+FindRecentProducts();
