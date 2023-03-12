@@ -24,12 +24,12 @@ const parse = data => {
           .find('.productList-price')
           .text()
       );
-
-      return {name, price};
+      const brand = "dedicated";
+      const scrapDate = new Date();
+      return {name, price, brand, scrapDate};
     })
     .get();
 };
-
 
 async function sleep(ms) {
   return new Promise(

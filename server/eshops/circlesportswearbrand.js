@@ -23,8 +23,9 @@ const parse = data => {
           .text()
           .split("€")[1]
       );
-
-      return {name, price};
+      const brand = "circle";
+      const scrapDate = new Date();
+      return {name, price, brand, scrapDate};
     })
     .get();
 };

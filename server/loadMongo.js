@@ -21,17 +21,12 @@ function importData() {
         "D:/COURS/A4/S8 - ESILV/Web Architecture Applications/TP1/clear-fashion/server/exports/dedicated.json",
         "D:/COURS/A4/S8 - ESILV/Web Architecture Applications/TP1/clear-fashion/server/exports/montlimart.json"
     ];
-    const brands = [
-        "circle",
-        "dedicated",
-        "montlimart"
-    ];
     var products = [];
-    filePaths.forEach(function (element, index) {
+    filePaths.forEach(function (element) {
         const current = JSON.parse(fs.readFileSync(element));
-        for (const item in current) {
+        /*for (const item in current) {
             current[`${item}`].brand = brands[index];
-        }
+        }*/
         products = Object.assign(products, current);
     });
     return products;

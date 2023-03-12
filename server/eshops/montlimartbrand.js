@@ -21,8 +21,9 @@ const parse = data => {
             .find('.price')
             .text()
         );
-  
-        return {name, price};
+        const brand = "montlimart";
+        const scrapDate = new Date();
+        return {name, price, brand, scrapDate};
       })
       .get();
   };
