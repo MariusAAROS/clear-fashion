@@ -27,35 +27,35 @@ function getClient() {
     return client;
 }
 
-async function Query(filter = {}, options = {}){
-  const client = getClient();
-  const final = client.connect(async () => {
-      const collection = client.db("clear-fashion").collection("products");
-      const result = await collection.find(filter, options).toArray();
-      client.close();
-      console.log(result);
-      console.log("#Items: ", result.length);
-      return result;
-});
-return final;
-}
-
-/*
-app.get('/products/:id', (request, response) => {
+app.get('/products/search', async (request, response) => {
   try{
-    const productId = request.params.id;
-    const script = {_id: ObjectId(productId)};
-	  console.log(JSON.stringify(script));
-    const searchResult = Query(script);
-    
-	  response.send({result : searchResult});
-    console.log(result);
+    const client = getClient();
+    const collection = client.db("clear-fashion").collection("products");
+    const brandName = request.query.brand;
+	  const priceRoof = request.query.price;
+	  var limPage = request.query.limit;
+
+    var script = {};
+
+    if (limPage == undefined) {
+      limPage = 12;
+    } else {
+      limPage = parseInt(limPage);
+    }
+    if (brandName !== undefined) {
+      script.brand = brandName;
+    }
+    if (priceRoof !== undefined) {
+      script.price = {$lte: parseInt(priceRoof)};
+    }
+    console.log(script);
+    const found = await collection.find(script).limit(limPage).toArray();
+    response.send({result: found});
 
   } catch(err) {
-	  response.send({error : "ID not found"});  
+    response.send({error : "Unreachable information"});  
   }
 });
-*/
 
 app.get('/products/:id', async (request, response) => {
   try{
@@ -63,17 +63,16 @@ app.get('/products/:id', async (request, response) => {
     const script = {_id: ObjectId(productId)};
     const client = getClient();
     const collection = client.db("clear-fashion").collection("products");
-    const searchResult = await collection.find(script).toArray();
-
-    //const searchResult = await Query(script, {});
-	  //console.log("result: \n", searchResult);
+    const found = await collection.find(script).toArray();
     
-    response.send({result: searchResult});
+    response.send({result: found});
 
   } catch(err) {
 	  response.send({error : "ID not found"});  
   }
 });
+
+
 
 app.listen(PORT);
 console.log(`📡 Running on port ${PORT}`);
