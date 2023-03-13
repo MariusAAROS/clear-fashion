@@ -49,12 +49,12 @@ function Query(filter = {}, options = {}){
 
 function FindAllBrandProduct(brandName = "dedicated") {
     const script = {brand: `${brandName}`};
-    Query(script);
+    return Query(script);
 }
 
 function FindAllItemsLowerThanPrice(price = 50) {
     const script = {price:{$lt:price}};
-    Query(script);
+    return Query(script);
 }
 
 function SortItemsByPrice(order= "desc") {
@@ -65,7 +65,7 @@ function SortItemsByPrice(order= "desc") {
     else {
         script = {sort: {price:1}};
     }
-    Query({}, script);
+    return Query({}, script);
 }
 
 function SortItemsByDate(order= "desc") {
@@ -76,17 +76,17 @@ function SortItemsByDate(order= "desc") {
     else {
         script = {sort: {scrapDate:1}};
     }
-    Query({}, script);
+    return Query({}, script);
 }
 
 function FindRecentProducts() {
     let twoWeeksAgo = new Date(Date.now()-14*24*60*60*1000);
     const script = {scrapDate: {$gte: twoWeeksAgo}};
-    Query({}, script);
+    return Query({}, script);
 }
 
-//FindAllBrandProduct("montlimart");
+FindAllBrandProduct("montlimart");
 //FindAllItemsLowerThanPrice(50);
 //SortItemsByPrice();
 //SortItemsByDate();
-FindRecentProducts();
+//FindRecentProducts();
