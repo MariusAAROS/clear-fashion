@@ -18,7 +18,7 @@ app.get('/', (request, response) => {
   response.send({'ack': true});
 });
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const fs = require('fs');
 
 function getClient() {
@@ -27,20 +27,21 @@ function getClient() {
     return client;
 }
 
-function Query(filter = {}, options = {}){
+async function Query(filter = {}, options = {}){
   const client = getClient();
-  client.connect(async () => {
+  const final = client.connect(async () => {
       const collection = client.db("clear-fashion").collection("products");
       const result = await collection.find(filter, options).toArray();
+      client.close();
       console.log(result);
       console.log("#Items: ", result.length);
-  client.close();
-  return result;
+      return result;
 });
+return final;
 }
 
-// 
-app.get('/products/:id', async (request, response) => {
+/*
+app.get('/products/:id', (request, response) => {
   try{
     const productId = request.params.id;
     const script = {_id: ObjectId(productId)};
@@ -54,7 +55,25 @@ app.get('/products/:id', async (request, response) => {
 	  response.send({error : "ID not found"});  
   }
 });
+*/
 
+app.get('/products/:id', async (request, response) => {
+  try{
+    const productId = request.params.id;
+    const script = {_id: ObjectId(productId)};
+    const client = getClient();
+    const collection = client.db("clear-fashion").collection("products");
+    const searchResult = await collection.find(script).toArray();
+
+    //const searchResult = await Query(script, {});
+	  //console.log("result: \n", searchResult);
+    
+    response.send({result: searchResult});
+
+  } catch(err) {
+	  response.send({error : "ID not found"});  
+  }
+});
 
 app.listen(PORT);
 console.log(`📡 Running on port ${PORT}`);
