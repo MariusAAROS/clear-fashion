@@ -48,7 +48,6 @@ app.get('/products/search', async (request, response) => {
     if (priceRoof !== undefined) {
       script.price = {$lte: parseInt(priceRoof)};
     }
-    console.log(script);
     const found = await collection.find(script).limit(limPage).toArray();
     response.send({result: found});
 

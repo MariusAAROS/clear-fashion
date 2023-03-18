@@ -23,9 +23,10 @@ const parse = data => {
           .text()
           .split("€")[1]
       );
+      const link =  "https://shop.circlesportswear.com/".concat($(element).find('.full-unstyled-link').attr('href'))
       const brand = "circle";
       const scrapDate = new Date();
-      return {name, price, brand, scrapDate};
+      return {name, price, brand, scrapDate, link};
     })
     .get();
 };
