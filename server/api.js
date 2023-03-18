@@ -73,6 +73,5 @@ app.get('/products/:id', async (request, response) => {
 });
 
 
-
 app.listen(PORT);
 console.log(`📡 Running on port ${PORT}`);

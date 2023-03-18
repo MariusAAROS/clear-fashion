@@ -24,9 +24,10 @@ const parse = data => {
           .find('.productList-price')
           .text()
       );
+      const link = "https://www.dedicatedbrand.com".concat($(element).find('.productList-link').attr('href'));
       const brand = "dedicated";
       const scrapDate = new Date();
-      return {name, price, brand, scrapDate};
+      return {name, price, brand, scrapDate, link};
     })
     .get();
 };
