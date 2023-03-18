@@ -23,6 +23,7 @@ const parse = data => {
           .text()
           .split("€")[1]
       );
+      const image = $(element).find('.media').children("img").attr("srcset").split("?")[0];
       const link =  "https://shop.circlesportswear.com/".concat($(element).find('.full-unstyled-link').attr('href'))
       const brand = "circle";
       const scrapDate = new Date();

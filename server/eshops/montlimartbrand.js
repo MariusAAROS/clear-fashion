@@ -21,10 +21,11 @@ const parse = data => {
             .find('.price')
             .text()
         );
+        const image = $(element).find('.product-miniature__thumb-link').children("img").attr("data-src");
         const link = $(element).find('.product-miniature__thumb-link').attr('href');
         const brand = "montlimart";
         const scrapDate = new Date();
-        return {name, price, brand, scrapDate, link};
+        return {name, price, brand, scrapDate, link, image};
       })
       .get();
   };
