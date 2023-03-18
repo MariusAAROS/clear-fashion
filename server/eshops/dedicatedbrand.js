@@ -25,9 +25,20 @@ const parse = data => {
           .text()
       );
       const link = "https://www.dedicatedbrand.com".concat($(element).find('.productList-link').attr('href'));
+      
+
+      const image = $(element).find('.productList-image').children("img").attr("src");
+
+      /*
+      var images = [];
+      $(element.find(".productList-image img").each((i, elem) => {
+        images.push($(elem).attr('src'));
+      }));
+*/
+      //const image = $(element.find(".productList-image img").attr('src'));
       const brand = "dedicated";
       const scrapDate = new Date();
-      return {name, price, brand, scrapDate, link};
+      return {name, price, brand, scrapDate, link, image};
     })
     .get();
 };

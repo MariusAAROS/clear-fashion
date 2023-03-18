@@ -26,7 +26,7 @@ const parse = data => {
       const link =  "https://shop.circlesportswear.com/".concat($(element).find('.full-unstyled-link').attr('href'))
       const brand = "circle";
       const scrapDate = new Date();
-      return {name, price, brand, scrapDate, link};
+      return {name, price, brand, scrapDate, link, image};
     })
     .get();
 };
