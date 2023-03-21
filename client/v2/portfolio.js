@@ -5,17 +5,17 @@
 Description of the available api endpoints :
 
   Search for specific products :
-  GET https://clear-fashion-fntmz1qx1-mariusaaros.vercel.app/procucts/:id
+  GET https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app/procucts/:id
 
   Search with filter : 
-  GET https://clear-fashion-fntmz1qx1-mariusaaros.vercel.app/products/search?brand=dedicated&limit=10&price=50
+  GET https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app/products/search?brand=dedicated&limit=10&price=50
   This endpoint accepts the following optional query string parameters:
   - `brand` - choose a brand
   - `limit` - number of products to return
   - `price`
 
   Search for available brands list :
-  GET https://clear-fashion-fntmz1qx1-mariusaaros.vercel.app/brands
+  GET https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app/brands
 */
 
 // current products on the page
@@ -70,7 +70,7 @@ const fetchProducts = async (brand, price, limit=20) => {
       queryExtension.concat("&");
     }
     const response = await fetch(
-      "https://clear-fashion-api.vercel.app".concat(queryExtension)
+      "https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app".concat(queryExtension)
     );
 
     const body = await response.json();
@@ -90,7 +90,7 @@ const fetchProducts = async (brand, price, limit=20) => {
 async function fetchBrands() {
   try {
     const response = await fetch(
-      'https://clear-fashion-fntmz1qx1-mariusaaros.vercel.app/brands'
+      'https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app/brands'
     );
     const body = await response.json();
 
