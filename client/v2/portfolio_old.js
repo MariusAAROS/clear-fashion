@@ -2,20 +2,19 @@
 'use strict';
 
 /*
-Description of the available api endpoints :
+Description of the available api
+GET https://clear-fashion-api.vercel.app/
 
-  Search for specific products :
-  GET https://clear-fashion-fntmz1qx1-mariusaaros.vercel.app/procucts/:id
+Search for specific products
 
-  Search with filter : 
-  GET https://clear-fashion-fntmz1qx1-mariusaaros.vercel.app/products/search?brand=dedicated&limit=10&price=50
-  This endpoint accepts the following optional query string parameters:
-  - `brand` - choose a brand
-  - `limit` - number of products to return
-  - `price`
+This endpoint accepts the following optional query string parameters:
 
-  Search for available brands list :
-  GET https://clear-fashion-fntmz1qx1-mariusaaros.vercel.app/brands
+- `page` - page of products to return
+- `size` - number of products to return
+
+GET https://clear-fashion-api.vercel.app/brands
+
+Search for available brands list
 */
 
 // current products on the page
@@ -54,25 +53,11 @@ const setCurrentProducts = ({result, meta}) => {
  * @param  {Number}  [size=12] - size of the page
  * @return {Object}
  */
-const fetchProducts = async (brand, price, limit=20) => {
+const fetchProducts = async (page = 1, size = 12) => {
   try {
-    var queryExtension = ""
-    if(brand !== "") {
-      queryExtension.concat(`?brand=${brand}`);
-    }
-    if(price !== "") {
-      if(queryExtension === "") {
-        queryExtension.concat("&");
-      }
-      queryExtension.concat(`price=${price}`);
-    }
-    if(queryExtension === "") {
-      queryExtension.concat("&");
-    }
     const response = await fetch(
-      "https://clear-fashion-api.vercel.app".concat(queryExtension)
+      `https://clear-fashion-api.vercel.app?page=${page}&size=${size}`
     );
-
     const body = await response.json();
 
     if (body.success !== true) {
@@ -90,7 +75,7 @@ const fetchProducts = async (brand, price, limit=20) => {
 async function fetchBrands() {
   try {
     const response = await fetch(
-      'https://clear-fashion-fntmz1qx1-mariusaaros.vercel.app/brands'
+      'https://clear-fashion-api.vercel.app/brands'
     );
     const body = await response.json();
 

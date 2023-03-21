@@ -56,6 +56,18 @@ app.get('/products/search', async (request, response) => {
   }
 });
 
+app.get('/brands', async (request, response) => {
+  try{
+    const client = getClient();
+    const collection = client.db("clear-fashion").collection("products");
+    const found = await collection.distinct('brand');
+    response.send({result: found});
+  }
+  catch{
+    response.send({error : "Couldn't fetch brands"}); 
+  }
+});
+
 app.get('/products/:id', async (request, response) => {
   try{
     const productId = request.params.id;
