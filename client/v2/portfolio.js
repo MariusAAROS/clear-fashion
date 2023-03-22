@@ -54,9 +54,11 @@ const setCurrentProducts = ({result, meta}) => {
  * @param  {Number}  [size=12] - size of the page
  * @return {Object}
  */
-const fetchProducts = async (brand, price, limit=20) => {
+
+const fetchProducts = async (brand = "", price = "", limit = 20) => {
   try {
-    var queryExtension = ""
+    var queryExtension = "";
+    console.log("test".concat(" lol"));
     if(brand !== "") {
       queryExtension.concat(`?brand=${brand}`);
     }
@@ -64,13 +66,22 @@ const fetchProducts = async (brand, price, limit=20) => {
       if(queryExtension === "") {
         queryExtension.concat("&");
       }
-      queryExtension.concat(`price=${price}`);
+      else {
+        queryExtension.concat("?");
+      }
+      queryExtension.concat(`price=${price.toString()}`);
     }
+    
     if(queryExtension === "") {
       queryExtension.concat("&");
     }
+    else {
+      queryExtension.concat("?");
+    }
+    console.log(queryExtension);
+    queryExtension.concat(limit.toString());
     const response = await fetch(
-      "https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app".concat(queryExtension)
+      "http://localhost:8092/products/search".concat(queryExtension)
     );
 
     const body = await response.json();
@@ -87,18 +98,21 @@ const fetchProducts = async (brand, price, limit=20) => {
   }
 };
 
+
 async function fetchBrands() {
   try {
     const response = await fetch(
-      'https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app/brands'
+      'http://localhost:8092/brands'
     );
     const body = await response.json();
 
-    if (body.success !== true) {
+    if (body === undefined) {
       console.error(error);
     }
     else {
-      var brands = body.data.result;
+      
+      var brands = body.result;
+      
       const nbBrands = brands.length;
       brands.splice(0, 0, "None");
       return brands;
@@ -347,12 +361,12 @@ selectPage.addEventListener('change', async (event) => {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const products = await fetchProducts();
-  setCurrentProducts(products);
+  /*const products = await fetchProducts();
+  setCurrentProducts(products);*/
   
   const brands = await fetchBrands();
   renderBrands(brands);
-
+  /*
   const allProducts = await fetchProducts(1, currentPagination.count);
 
   const nbNewProds = nbNewProducts(allProducts, currentPagination);
@@ -372,7 +386,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   favoritesCheckBoxes = document.querySelectorAll('.star');
   setupCheckBoxListeners(favoritesCheckBoxes);
-  createFavoriteList(currentPagination);
+  createFavoriteList(currentPagination);*/
 });
 
 /**
