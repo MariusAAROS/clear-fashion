@@ -44,6 +44,7 @@ var favorites;
  * @param {Object} meta - pagination meta info
  */
 const setCurrentProducts = ({result, meta}) => {
+  console.log(meta);
   currentProducts = result;
   currentPagination = meta;
 };
@@ -79,19 +80,16 @@ const fetchProducts = async (brand = "", price = "", limit = 20) => {
       queryExtension = queryExtension.concat("&");
     }
     queryExtension = queryExtension.concat(`limit=${limit.toString()}`);
-    console.log(queryExtension);
     const response = await fetch(
       "http://localhost:8092/products/search".concat(queryExtension)
     );
 
     const body = await response.json();
-    console.log(body);
     if (body === undefined) {
-      console.error(body);
       return {currentProducts, currentPagination};
     }
 
-    return body.result;
+    return body;
   } catch (error) {
     console.error(error);
     return {currentProducts, currentPagination};
@@ -193,8 +191,8 @@ function lastReleaseDate(allProducts){
 /**
  * Finds the number of new products
  */
-function nbNewProducts(allProducts, currentPagination) {
-  const countNewProds = allProducts.result.filter(checkDate).length;
+function nbNewProducts(allProducts) {
+  const countNewProds = allProducts.meta.pageSize;
   return countNewProds;
 };
 
@@ -280,7 +278,7 @@ function dateDiff(date1, date2) {
 function checkDate(data){
   var curDate = new Date();
   curDate.getTime();
-  var nDays = dateDiff(data.released, curDate);
+  var nDays = dateDiff(data.scrapDate, curDate);
   return nDays.day <= 30;
 }
 
@@ -291,8 +289,8 @@ function checkDate(data){
  */
 function sortByDate(data) {
   data.sort((a, b) => {
-    const dateA = new Date(a.released);
-    const dateB = new Date(b.released);
+    const dateA = new Date(a.scrapDate);
+    const dateB = new Date(b.scrapDate);
     return dateB - dateA;
   });
   return data;
@@ -305,7 +303,7 @@ function sortByDate(data) {
  */
 function sortByPrice(data) {
   data.sort((a, b) => b.price - a.price);
-  return data
+  return data.reverse();
 }
 
 /**
@@ -361,26 +359,28 @@ selectPage.addEventListener('change', async (event) => {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const products = await fetchProducts();
+  const products = await fetchProducts("", "");
   console.log(products);
-  /*setCurrentProducts(products);*/
+  setCurrentProducts(products);
   
   const brands = await fetchBrands();
   renderBrands(brands);
-  /*
-  const allProducts = await fetchProducts(1, currentPagination.count);
+  
+  const allProducts = await fetchProducts("","", 10000);
+  const nbNewProds = nbNewProducts(allProducts);
 
-  const nbNewProds = nbNewProducts(allProducts, currentPagination);
   document.getElementById('nbNewProducts').innerHTML = nbNewProds;
+  console.log(allProducts.result[0].price);
+  console.log(typeof(allProducts.result[0].price));
 
-  const p50 = quantile(sortByDate(allProducts.result), 0.5, "price");
-  const p90 = quantile(sortByDate(allProducts.result), 0.9, "price");
-  const p95 = quantile(sortByDate(allProducts.result), 0.95, "price");
+  const p50 = quantile(sortByPrice(allProducts.result), 0.5, "price");
+  const p90 = quantile(sortByPrice(allProducts.result), 0.9, "price");
+  const p95 = quantile(sortByPrice(allProducts.result), 0.95, "price");
 
   document.getElementById('p50').innerHTML = Math.round(p50*100)/100;
   document.getElementById('p90').innerHTML = Math.round(p90*100)/100;
   document.getElementById('p95').innerHTML = Math.round(p95*100)/100;
-
+/*
   document.getElementById('lastRDate').innerHTML = lastReleaseDate(allProducts.result);
 
   render(currentProducts, currentPagination);

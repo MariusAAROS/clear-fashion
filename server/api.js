@@ -49,7 +49,8 @@ app.get('/products/search', async (request, response) => {
       script.price = {$lte: parseInt(priceRoof)};
     }
     const found = await collection.find(script).limit(limPage).toArray();
-    response.send({result: found});
+    const metadata = {pageSize: found.length}
+    response.send({result: found, meta: metadata});
 
   } catch(err) {
     response.send({error : "Unreachable information"});  
@@ -75,8 +76,8 @@ app.get('/products/:id', async (request, response) => {
     const client = getClient();
     const collection = client.db("clear-fashion").collection("products");
     const found = await collection.find(script).toArray();
-    
-    response.send({result: found});
+    const metadata = {pageSize: found.length};
+    response.send({result: found, meta: metadata});
 
   } catch(err) {
 	  response.send({error : "ID not found"});  
