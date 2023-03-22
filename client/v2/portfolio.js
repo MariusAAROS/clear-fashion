@@ -44,7 +44,6 @@ var favorites;
  * @param {Object} meta - pagination meta info
  */
 const setCurrentProducts = ({result, meta}) => {
-  console.log(meta);
   currentProducts = result;
   currentPagination = meta;
 };
@@ -185,14 +184,15 @@ const quantile = (sorted, q, attribute) => {
  */
 function lastReleaseDate(allProducts){
   allProducts = sortByDate(allProducts);
-  return allProducts[0].released;
+  return allProducts[0].scrapDate;
 };
 
 /**
  * Finds the number of new products
  */
-function nbNewProducts(allProducts) {
-  const countNewProds = allProducts.meta.pageSize;
+
+function nbNewProducts(allProducts, currentPagination) {
+  const countNewProds = allProducts.result.filter(checkDate).length;
   return countNewProds;
 };
 
@@ -202,7 +202,7 @@ function nbNewProducts(allProducts) {
  */
 const renderIndicators = pagination => {
   const {count} = pagination;
-  spanNbProducts.innerHTML = count;
+  //spanNbProducts.innerHTML = count;
 };
 
 /**
@@ -347,7 +347,7 @@ function removeFavorite(element) {
  * Select the number of products to display
  */
 selectShow.addEventListener('change', async (event) => {
-  const products = await fetchProducts(currentPagination.currentPage, parseInt(event.target.value));
+  const products = await fetchProducts("", "", parseInt(event.target.value));
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });
@@ -360,18 +360,17 @@ selectPage.addEventListener('change', async (event) => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const products = await fetchProducts("", "");
-  console.log(products);
   setCurrentProducts(products);
   
   const brands = await fetchBrands();
   renderBrands(brands);
   
   const allProducts = await fetchProducts("","", 10000);
-  const nbNewProds = nbNewProducts(allProducts);
 
+  spanNbProducts.innerHTML = allProducts.meta.pageSize;
+
+  const nbNewProds = nbNewProducts(allProducts);
   document.getElementById('nbNewProducts').innerHTML = nbNewProds;
-  console.log(allProducts.result[0].price);
-  console.log(typeof(allProducts.result[0].price));
 
   const p50 = quantile(sortByPrice(allProducts.result), 0.5, "price");
   const p90 = quantile(sortByPrice(allProducts.result), 0.9, "price");
@@ -380,11 +379,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('p50').innerHTML = Math.round(p50*100)/100;
   document.getElementById('p90').innerHTML = Math.round(p90*100)/100;
   document.getElementById('p95').innerHTML = Math.round(p95*100)/100;
-/*
+
   document.getElementById('lastRDate').innerHTML = lastReleaseDate(allProducts.result);
 
   render(currentProducts, currentPagination);
-
+/*
   favoritesCheckBoxes = document.querySelectorAll('.star');
   setupCheckBoxListeners(favoritesCheckBoxes);
   createFavoriteList(currentPagination);*/
@@ -393,16 +392,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 /**
  * Event listener for brands filtering
  */
-selectBrand.addEventListener('change', (event) => {
+selectBrand.addEventListener('change', async (event) => {
   let filteredProducts = [];
   const selectedBrand = event.target.value;
   if (selectedBrand !== "None") {
-    filteredProducts = currentProducts.filter(product => product.brand === selectedBrand);
+    //filteredProducts = currentProducts.filter(product => product.brand === selectedBrand);
+    filteredProducts = await fetchProducts(selectedBrand, "", currentPagination.pageSize);
   } else {
-    filteredProducts = currentProducts;
+    filteredProducts = await fetchProducts("", "", currentPagination.pageSize);
   }
-  currentPagination.brand = event.target.value;
-  renderProducts(filteredProducts);
+  currentPagination.brand = selectedBrand;
+  renderProducts(filteredProducts.result);
 });
 /*
 selectBrand.addEventListener('change', async (event) => {
@@ -445,10 +445,10 @@ selectSort.addEventListener('change', (event) => {
     sortedProducts = sortByDate(currentProducts);
   }
   else if (event.target.value === 'price-asc'){
-    sortedProducts = sortByPrice(currentProducts).reverse();
+    sortedProducts = sortByPrice(currentProducts);
   }
   else if (event.target.value === 'price-desc'){
-    sortedProducts = sortByPrice(currentProducts);
+    sortedProducts = sortByPrice(currentProducts).reverse();
   }
   //setCurrentProducts(currentProducts, currentPagination);
   renderProducts(sortedProducts);
