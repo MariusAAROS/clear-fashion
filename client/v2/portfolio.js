@@ -58,40 +58,40 @@ const setCurrentProducts = ({result, meta}) => {
 const fetchProducts = async (brand = "", price = "", limit = 20) => {
   try {
     var queryExtension = "";
-    console.log("test".concat(" lol"));
+    //console.log("test".concat(" lol"));
+
     if(brand !== "") {
-      queryExtension.concat(`?brand=${brand}`);
+      queryExtension = queryExtension.concat(`?brand=${brand}`);
     }
     if(price !== "") {
       if(queryExtension === "") {
-        queryExtension.concat("&");
+        queryExtension = queryExtension.concat("?");
       }
       else {
-        queryExtension.concat("?");
+        queryExtension = queryExtension.concat("&");
       }
-      queryExtension.concat(`price=${price.toString()}`);
+      queryExtension = queryExtension.concat(`price=${price.toString()}`);
     }
-    
     if(queryExtension === "") {
-      queryExtension.concat("&");
+      queryExtension = queryExtension.concat("?");
     }
     else {
-      queryExtension.concat("?");
+      queryExtension = queryExtension.concat("&");
     }
+    queryExtension = queryExtension.concat(`limit=${limit.toString()}`);
     console.log(queryExtension);
-    queryExtension.concat(limit.toString());
     const response = await fetch(
       "http://localhost:8092/products/search".concat(queryExtension)
     );
 
     const body = await response.json();
-
-    if (body.success !== true) {
+    console.log(body);
+    if (body === undefined) {
       console.error(body);
       return {currentProducts, currentPagination};
     }
 
-    return body.data;
+    return body.result;
   } catch (error) {
     console.error(error);
     return {currentProducts, currentPagination};
@@ -361,8 +361,9 @@ selectPage.addEventListener('change', async (event) => {
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-  /*const products = await fetchProducts();
-  setCurrentProducts(products);*/
+  const products = await fetchProducts();
+  console.log(products);
+  /*setCurrentProducts(products);*/
   
   const brands = await fetchBrands();
   renderBrands(brands);
