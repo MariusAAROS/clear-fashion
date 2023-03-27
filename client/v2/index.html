@@ -1,6 +1,41 @@
 <!DOCTYPE html>
 <html>
   <style>
+    :root {
+        --color-primary: rgb(241, 202, 101);
+        --color-secondary: #555;
+    }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+    html {
+    scroll-behavior: smooth;
+    }
+    h1, h2 {
+    margin-top: 0;
+    }
+    
+    section {
+      margin-bottom: 2em;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5em;
+      font-weight: bold;
+    }
+    
+    select {
+      margin-right: 1em;
+      padding: 0.5em;
+      border: 1px solid var(--color-secondary);
+      border-radius: 4px;
+      background-color: #fff;
+      color: var(--color-secondary);
+      font-size: 1.6rem;
+    }
     .star {
     visibility:hidden;
     font-size:20px;
@@ -19,12 +54,64 @@
     }
     body {
       font-family: "Helvetica", "Arial", sans-serif;
+      background-color: #b8e2f2;
       margin: 0 auto;
       max-width: 110em;
       line-height: 1.5;
       padding: 2em 1em;
       color: #555;
     }
+    #filterRPrice-select,
+    #filterRReleased-select {
+      display: inline-block;
+    }
+    #indicators {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    }
+
+    .indicator {
+      display: flex;
+      flex-direction: column;
+      margin: 0 10px;
+    }
+
+    .indicator-label {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .indicator-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+    .product img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10%;
+    }
+    .product-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .product-container img {
+    width: 120px;
+    height: 120px;
+    border-radius: 10%;
+    margin-right: 10px;
+  }
+
+  .product-container span,
+  .product-container a {
+    font-family: Helvetica, sans-serif;
+  }
     
   </style>
   <head>
@@ -34,6 +121,15 @@
   <body>
     <h1>Clear fashion</h1>
     <section id="options">
+      <style>
+        #options > div {
+          display: inline-block; /* set the display property to inline-block for all child div elements */
+          vertical-align: middle; /* optional: align child elements vertically */
+        }
+        #options label {
+          display: inline; /* set the display property to inline for all child label elements */
+        }
+      </style>
       <div id="show">
         <label for="show-select">Show:</label>
         <select name="show" id="show-select">
@@ -46,15 +142,9 @@
         <label for="page-select">Go to page:</label>
         <select name="page" id="page-select"> </select>
       </div>
-      <div id="filters">
-        <label for="filterRPrice-select"></label>
-        <button type="button" id="filterRPrice-select">By reasonable price</button>
-        <label for="filterRReleased-select"></label>
-        <button type="button" id="filterRReleased-select">By recently released</button>
-        <div id="brand">
-          <label for="brand-select">By brands:</label>
-          <select name="brand" id="brand-select"> </select>
-        </div>
+      <div id="brand">
+        <label for="brand-select">By brands:</label>
+        <select name="brand" id="brand-select"> </select>
       </div>
       <div id="sort">
         <label for="sort-select">Sort:</label>
@@ -65,36 +155,43 @@
           <option value="date-desc">Anciently released</option>
         </select>
       </div>
+      <div id="filters">
+        <label for="filterRPrice-select"></label>
+        <button type="button" id="filterRPrice-select">By reasonable price</button>
+        <label for="filterRReleased-select"></label>
+        <button type="button" id="filterRReleased-select">By recently released</button>
+      </div>
     </section>
+    
     <section id="indicators">
       <h2>Indicators</h2>
-      <div>
-        <span>Number of products</span>
-        <span id="nbProducts">0</span>
+      <div class="indicator">
+        <span class="indicator-label">Number of products:</span>
+        <span class="indicator-value" id="nbProducts">0</span>
       </div>
-      <div>
-        <span>Number of brands</span>
-        <span id="nbBrands">0</span>
+      <div class="indicator">
+        <span class="indicator-label">Number of brands:</span>
+        <span class="indicator-value" id="nbBrands">0</span>
       </div>
-      <div>
-        <span>Number of new products</span>
-        <span id="nbNewProducts">0</span>
+      <div class="indicator">
+        <span class="indicator-label">Number of new products:</span>
+        <span class="indicator-value" id="nbNewProducts">0</span>
       </div>
-      <div>
-        <span>p50 price value</span>
-        <span id="p50">0</span>
+      <div class="indicator">
+        <span class="indicator-label">p50 price value:</span>
+        <span class="indicator-value" id="p50">0</span>
       </div>
-      <div>
-        <span>p90 price value</span>
-        <span id="p90">0</span>
+      <div class="indicator">
+        <span class="indicator-label">p90 price value:</span>
+        <span class="indicator-value" id="p90">0</span>
       </div>
-      <div>
-        <span>p95 price value</span>
-        <span id="p95">0</span>
+      <div class="indicator">
+        <span class="indicator-label">p95 price value:</span>
+        <span class="indicator-value" id="p95">0</span>
       </div>
-      <div>
-        <span>Last released date</span>
-        <span id="lastRDate">2020-01-01</span>
+      <div class="indicator">
+        <span class="indicator-label">Last released date:</span>
+        <span class="indicator-value" id="lastRDate">2020-01-01</span>
       </div>
     </section>
     <section id="products"></section>

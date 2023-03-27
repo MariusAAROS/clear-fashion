@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Fashion | Environmentally & Human-Friendly Clothes</title>
+    <style>
+      :root {
+        --color-primary: rgb(241, 202, 101);
+        --color-secondary: #555;
+      }
+      *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    margin: 0;
+    padding: 2em 1em;
+    color: var(--color-secondary);
+  }
+  
+  h1, h2 {
+    margin-top: 0;
+  }
+  
+  section {
+    margin-bottom: 2em;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+  }
+  
+  select {
+    margin-right: 1em;
+    padding: 0.5em;
+    border: 1px solid var(--color-secondary);
+    border-radius: 4px;
+    background-color: #fff;
+    color: var(--color-secondary);
+    font-size: 1.6rem;
+  }
+  
+  button {
+    margin-right: 1em;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--color-primary);
+    color: #fff;
+    font-size: 1.6rem;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: darken(var(--color-primary), 10%);
+  }
+  
+  .star {
+    visibility: hidden;
+    font-size: 2rem;
+    cursor: pointer;
+    display: inline-block; 
+    position: relative;
+    top: -0.5em;
+    color: var(--color-primary);
+  }
+  
+  .star:before {
+    content: "\2605";
+    visibility: visible;
+  }
+  
+  .star:checked:before {
+    content: "\2606";
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Clear Fashion</h1>
+  </header>
+
+  <section>
+    <div>
+      <label for="show-select">Show:</label>
+      <select name="show" id="show-select">
+        <option value="12">12</option>
+        <option value="24">24</option>
+        <option value="48">48</option>
+      </select>
+    </div>
+    
+    <div>
+      <label for="page-select">Go to page:</label>
+      <select name="page" id="page-select"></select>
+    </div>
+    
+    <div>
+      <button id="filter-price">By reasonable price</button>
+      <button id="filter-released">By recently released</button>
+      
+      <div>
+        <label for="brand-select">By brand:</label>
+        <select name="brand" id="brand-select"></select>
+      </div>
+    </div>
+    
+    <div>
+      <label for="sort-select">Sort by:</label>
+      <select name="sort" id="sort-select">
