@@ -3,17 +3,14 @@
 
 /*
 Description of the available api endpoints :
-
   Search for specific products :
   GET https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app/procucts/:id
-
   Search with filter : 
   GET https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app/products/search?brand=dedicated&limit=10&price=50
   This endpoint accepts the following optional query string parameters:
   - `brand` - choose a brand
   - `limit` - number of products to return
   - `price`
-
   Search for available brands list :
   GET https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app/brands
 */
@@ -55,7 +52,7 @@ const setCurrentProducts = ({result, meta}) => {
  * @return {Object}
  */
 
-const fetchProducts = async (brand = "", price = "", limit = 20) => {
+const fetchProducts = async (brand = "", price = "", limit = 12) => {
   try {
     var queryExtension = "";
     //console.log("test".concat(" lol"));
@@ -157,7 +154,7 @@ const renderProducts = products => {
  * @param  {Object} pagination
  */
 const renderPagination = pagination => {
-  const {currentPage, pageCount} = pagination;
+  const {currentPage, pageCount, pageSize} = pagination;
   const options = Array.from(
     {'length': pageCount},
     (value, index) => `<option value="${index + 1}">${index + 1}</option>`
@@ -352,27 +349,32 @@ function removeFavorite(element) {
  * Select the number of products to display
  */
 selectShow.addEventListener('change', async (event) => {
-  const products = await fetchProducts("", "", parseInt(event.target.value));
+  var products = await fetchProducts("", "", parseInt(event.target.value));
+  console.log(products.meta);
+  products.result = products.result.slice(0, parseInt(event.target.value));
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });
 
 selectPage.addEventListener('change', async (event) => {
-  const products = await fetchProducts(parseInt(event.target.value), currentPagination.pageSize);
+  var products = await fetchProducts("", "");
+  products.result = products.result.slice(currentPagination.pageSize*(parseInt(event.target.value)-1), currentPagination.pageSize*parseInt(event.target.value));
+  products.meta.currentPage = parseInt(event.target.value);
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const products = await fetchProducts("", "");
+  var products = await fetchProducts("", "");
+  products.result = products.result.slice(0, 12);
   setCurrentProducts(products);
-  
+  console.log(products.meta);
   const brands = await fetchBrands();
   renderBrands(brands);
   
   const allProducts = await fetchProducts("","", 10000);
 
-  spanNbProducts.innerHTML = allProducts.meta.pageSize;
+  spanNbProducts.innerHTML = allProducts.result.length;
 
   const nbNewProds = nbNewProducts(allProducts);
   document.getElementById('nbNewProducts').innerHTML = nbNewProds;
@@ -412,7 +414,6 @@ selectBrand.addEventListener('change', async (event) => {
 /*
 selectBrand.addEventListener('change', async (event) => {
   const products = await fetchProducts(1, currentPagination.pageCount);
-
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
 });

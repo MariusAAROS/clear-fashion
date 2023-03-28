@@ -48,8 +48,10 @@ app.get('/products/search', async (request, response) => {
     if (priceRoof !== undefined) {
       script.price = {$lte: parseInt(priceRoof)};
     }
-    const found = await collection.find(script).limit(limPage).toArray();
-    const metadata = {pageSize: found.length}
+    const found = await collection.find(script).toArray();
+    const metadata = {currentPage: 1,
+                      pageSize: limPage,
+                      pageCount: parseInt(found.length/limPage)}
     response.send({result: found, meta: metadata});
 
   } catch(err) {
