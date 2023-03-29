@@ -228,7 +228,7 @@ const renderBrands = brands => {
     brands,
     (value) => `<option value="${value}">${value}</option>`
   ).join('');
-  document.getElementById('nbBrands').innerHTML = brands.length;
+  document.getElementById('nbBrands').innerHTML = brands.length-1;
   selectBrand.innerHTML = options;
 };
 

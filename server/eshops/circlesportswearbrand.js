@@ -23,8 +23,12 @@ const parse = data => {
           .text()
           .split("€")[1]
       );
-      const image = $(element).find('.media').children("img").attr("srcset").split("?")[0];
-      const link =  "https://shop.circlesportswear.com/".concat($(element).find('.full-unstyled-link').attr('href'))
+      var image = $(element).find('.media').children("img").attr("srcset").split("?")[0];
+      if (image !== undefined) {
+        image = image.substring(2);
+      }
+      console.log(image);
+      const link =  "https://shop.circlesportswear.com/".concat($(element).find('.full-unstyled-link').attr('href'));
       const brand = "circle";
       const scrapDate = new Date();
       return {name, price, brand, scrapDate, link, image};
