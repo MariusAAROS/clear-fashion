@@ -52,13 +52,13 @@ async function awaitAll(obj) {
 module.exports.navigate = async function () {
   try {
     const urls = ["https://www.dedicatedbrand.com/en/men/all-men", "https://www.dedicatedbrand.com/en/women/all-women"];
-    var products = new Object();
+    var products = [];
     var temp;
     for (let i = 0; i < urls.length; i++) {
       console.log("Current url: ", urls[i]);
       temp = this.scrape(urls[i]);
       console.log(await temp);
-      products = Object.assign(products, await temp);
+      products = products.concat(await temp);
     }
     awaitAll(products);
     console.log("Number of items: ", products.length);
