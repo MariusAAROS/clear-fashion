@@ -121,6 +121,7 @@ async function fetchBrands() {
  * @param  {Array} products
  */
 const renderProducts = products => {
+  console.log(products[0]);
   const fragment = document.createDocumentFragment();
   const div = document.createElement('div');
   var counter = -1;
@@ -128,14 +129,14 @@ const renderProducts = products => {
     .map(product => {
       counter++;
       return `
-      <div class="product" id=${product.uuid}>
+      <div class="product" id=${product._id}>
         <div class="product-container">
           <img src="${product.image}" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/3/3c/Clothes_hanger_icon_3.svg'" vspace="15">
           <div>
             <span>${product.brand}</span>
             <a href="${product.link}" target="_blank">${product.name}</a>
             <span>${product.price}</span>
-            <input id="cb${counter}" class="star" type="checkbox" title="bookmark page" checked>
+            <input id="cb_${product._id}" class="star" type="checkbox" title="bookmark page" checked>
           </div>
         </div>
       </div>
