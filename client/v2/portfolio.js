@@ -130,14 +130,14 @@ const renderProducts = products => {
       return `
       <div class="product" id=${product.uuid}>
         <div class="product-container">
-          <img src="${product.image}" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/3/3c/Clothes_hanger_icon_3.svg'">
+          <img src="${product.image}" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/3/3c/Clothes_hanger_icon_3.svg'" vspace="15">
           <div>
             <span>${product.brand}</span>
             <a href="${product.link}" target="_blank">${product.name}</a>
             <span>${product.price}</span>
+            <input id="cb${counter}" class="star" type="checkbox" title="bookmark page" checked>
           </div>
         </div>
-        <input id="cb${counter}" class="star" type="checkbox" title="bookmark page" checked>
       </div>
     `;
     })
