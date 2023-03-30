@@ -17,7 +17,7 @@ Description of the available api endpoints :
 
 // current products on the page
 let currentProducts = [];
-let currentPagination = {};
+let currentPagination = {pageSize: 12};
 
 // instantiate the selectors
 const selectShow = document.querySelector('#show-select');
@@ -31,9 +31,12 @@ const selectFilterRecentlyReleased = document.querySelector('#filterRReleased-se
 
 const spanNbBrands = document.querySelector('#nbBrands');
 
-var favoritesCheckBoxes;
-var favorites;
-//var favoritesCheckBoxes = document.querySelectorAll('.star'); 
+var favorites = [];
+const fetchedFav = JSON.parse(localStorage.getItem("favorites"));
+if(fetchedFav !== undefined && fetchedFav !== "" && fetchedFav != null) {
+  favorites = fetchedFav;
+}
+var favoritesCheckBoxes = document.querySelectorAll('.star'); 
 
 /**
  * Set global value
@@ -121,13 +124,22 @@ async function fetchBrands() {
  * @param  {Array} products
  */
 const renderProducts = products => {
-  console.log(products[0]);
   const fragment = document.createDocumentFragment();
   const div = document.createElement('div');
   var counter = -1;
+  //var checkMarker = "checked";
   const template = products
     .map(product => {
       counter++;
+      var checkMarker;
+      if(favorites.includes(`${product._id}`)) {
+        checkMarker = "";
+      }
+      else {
+        checkMarker = "checked";
+      }
+      
+
       return `
       <div class="product" id=${product._id}>
         <div class="product-container">
@@ -136,7 +148,7 @@ const renderProducts = products => {
             <span>${product.brand}</span>
             <a href="${product.link}" target="_blank">${product.name}</a>
             <span>${product.price}</span>
-            <input id="cb_${product._id}" class="star" type="checkbox" title="bookmark page" checked>
+            <input id="${product._id}" class="star" type="checkbox" title="bookmark page" ${checkMarker}>
           </div>
         </div>
       </div>
@@ -232,13 +244,12 @@ const renderBrands = brands => {
   selectBrand.innerHTML = options;
 };
 
-
 const render = (products, pagination) => {
   renderProducts(products);
   renderPagination(pagination);
   renderIndicators(pagination);
+  setupCheckBoxListeners(favoritesCheckBoxes, favorites);
 };
-
 
 /**
  * Filters products by reasonable price
@@ -329,17 +340,24 @@ function createFavoriteList(pagination) {
  * Adds an element to favorites list
  * @param {Object} element 
  */
-function addToFavorite(element) {
-  localStorage.favorites.push(element);
+function addToFavorite(favorites, element) {
+  favorites.push(element);
 }
 
 /**
  * Removes an element from favorites list
  * @param {Object} element 
  */
-function removeFavorite(element) {
-  n = 0; //il faut calculer la position de l'élément dans les favoris
-  localStorage.favorites.splice(n, 1);
+function removeFavorite(favorites, element) {
+  let i = 0;
+  while (i < favorites.length) {
+    if (favorites[i] === element) {
+      favorites.splice(i, 1);
+    } 
+    else {
+      ++i;
+    }
+  }
 }
 
 /**
@@ -369,7 +387,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   var products = await fetchProducts("", "");
   products.result = products.result.slice(0, 12);
   setCurrentProducts(products);
-  console.log(products.meta);
   const brands = await fetchBrands();
   renderBrands(brands);
   
@@ -391,10 +408,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('lastRDate').innerHTML = lastReleaseDate(allProducts.result);
 
   render(currentProducts, currentPagination);
-/*
+
   favoritesCheckBoxes = document.querySelectorAll('.star');
-  setupCheckBoxListeners(favoritesCheckBoxes);
-  createFavoriteList(currentPagination);*/
+  setupCheckBoxListeners(favoritesCheckBoxes, favorites);
+  //createFavoriteList(currentPagination);
 });
 
 /**
@@ -403,14 +420,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 selectBrand.addEventListener('change', async (event) => {
   let filteredProducts = [];
   const selectedBrand = event.target.value;
+  const oldSize = currentPagination.pageSize;
+  const oldCurrentPage = currentPagination.currentPage;
   if (selectedBrand !== "None") {
     //filteredProducts = currentProducts.filter(product => product.brand === selectedBrand);
     filteredProducts = await fetchProducts(selectedBrand, "", currentPagination.pageSize);
   } else {
     filteredProducts = await fetchProducts("", "", currentPagination.pageSize);
   }
+  filteredProducts.result = filteredProducts.result.slice(oldSize*(parseInt(oldCurrentPage)-1), oldSize*parseInt(oldCurrentPage));
   currentPagination.brand = selectedBrand;
+  currentPagination.pageSize = oldSize;
   renderProducts(filteredProducts.result);
+  setupCheckBoxListeners(favoritesCheckBoxes, favorites);
 });
 /*
 selectBrand.addEventListener('change', async (event) => {
@@ -428,6 +450,7 @@ selectFilterReasonablePrice.addEventListener('click', () => {
   filteredProducts = currentProducts.filter(checkPrice);
   //setCurrentProducts(currentProducts, currentPagination);
   renderProducts(filteredProducts);
+  setupCheckBoxListeners(favoritesCheckBoxes, favorites);
 });
 
 /**
@@ -438,6 +461,7 @@ selectFilterRecentlyReleased.addEventListener('click', () => {
   filteredProducts = currentProducts.filter(checkDate);
   //setCurrentProducts(currentProducts, currentPagination);
   renderProducts(filteredProducts);
+  setupCheckBoxListeners(favoritesCheckBoxes, favorites);
 })
 
 /**
@@ -464,17 +488,18 @@ selectSort.addEventListener('change', (event) => {
 /**
  * Event listener for favorites selection
  */
-function setupCheckBoxListeners(favoritesCheckBoxes) {
+function setupCheckBoxListeners(favoritesCheckBoxes, favorites) {
   favoritesCheckBoxes.forEach(checkbox => {
     checkbox.addEventListener('change', event => {
-      if (event.target.value === 'checked') {
-        const no = parseInt(checkbox.id.charAt(checkbox.id.length-1));
-        const element = currentProducts[no];
-        addToFavorite(element);
+      const element = event.target.id;
+      if (!event.target.checked) {
+        console.log(favorites);
+        addToFavorite(favorites, element);
       }
       else {
-
+        removeFavorite(favorites, element);
       }
+      localStorage.setItem('favorites', JSON.stringify(favorites));
     });
   });
 };
