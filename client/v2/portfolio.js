@@ -28,6 +28,7 @@ const selectBrand = document.querySelector('#brand-select');
 const selectSort = document.querySelector('#sort-select');
 const selectFilterReasonablePrice = document.querySelector('#filterRPrice-select');
 const selectFilterRecentlyReleased = document.querySelector('#filterRReleased-select');
+const selectFilterFavorites = document.querySelector('#filterFavorites-select');
 
 const spanNbBrands = document.querySelector('#nbBrands');
 
@@ -468,7 +469,7 @@ selectFilterRecentlyReleased.addEventListener('click', () => {
   renderProducts(filteredProducts);
   favoritesCheckBoxes = document.querySelectorAll('.star');
   setupCheckBoxListeners(favoritesCheckBoxes, favorites);
-})
+});
 
 /**
  * Event listener for sorting
@@ -511,3 +512,22 @@ function setupCheckBoxListeners(favoritesCheckBoxes, favorites) {
     });
   });
 };
+
+selectFilterFavorites.addEventListener('click', async () => {
+  const baseURL = "http://localhost:8092/products/";
+  var currentURL;
+  var fullFav = [];
+  for(const [_, value] of Object.entries(favorites)) {
+    //console.log(value);
+    currentURL = baseURL.concat(value);
+    //console.log(currentURL);
+    const response = await fetch(currentURL);
+    const body = await response.json();
+    if(body.result !== undefined) {
+      fullFav.push(body.result[0]);
+    }
+    render(fullFav, currentPagination);
+    favoritesCheckBoxes = document.querySelectorAll('.star');
+    setupCheckBoxListeners(favoritesCheckBoxes, favorites);
+  }
+});
