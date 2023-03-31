@@ -4,15 +4,15 @@
 /*
 Description of the available api endpoints :
   Search for specific products :
-  GET https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app/procucts/:id
+  GET https://clear-fashion-api-ten.vercel.app/procucts/:id
   Search with filter : 
-  GET https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app/products/search?brand=dedicated&limit=10&price=50
+  GET https://clear-fashion-api-ten.vercel.app/products/search?brand=dedicated&limit=10&price=50
   This endpoint accepts the following optional query string parameters:
   - `brand` - choose a brand
   - `limit` - number of products to return
   - `price`
   Search for available brands list :
-  GET https://clear-fashion-fc1dn05tf-mariusaaros.vercel.app/brands
+  GET https://clear-fashion-api-ten.vercel.app/brands
 */
 
 // current products on the page
@@ -81,7 +81,7 @@ const fetchProducts = async (brand = "", price = "", limit = 12) => {
     }
     queryExtension = queryExtension.concat(`limit=${limit.toString()}`);
     const response = await fetch(
-      "http://localhost:8092/products/search".concat(queryExtension)
+      "https://clear-fashion-api-ten.vercel.app/products/search".concat(queryExtension)
     );
 
     const body = await response.json();
@@ -100,7 +100,7 @@ const fetchProducts = async (brand = "", price = "", limit = 12) => {
 async function fetchBrands() {
   try {
     const response = await fetch(
-      'http://localhost:8092/brands'
+      'https://clear-fashion-api-ten.vercel.app/brands'
     );
     const body = await response.json();
 
@@ -514,7 +514,7 @@ function setupCheckBoxListeners(favoritesCheckBoxes, favorites) {
 };
 
 selectFilterFavorites.addEventListener('click', async () => {
-  const baseURL = "http://localhost:8092/products/";
+  const baseURL = "https://clear-fashion-api-ten.vercel.app/products/";
   var currentURL;
   var fullFav = [];
   for(const [_, value] of Object.entries(favorites)) {
