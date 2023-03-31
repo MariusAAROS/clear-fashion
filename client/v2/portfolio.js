@@ -369,10 +369,11 @@ function removeFavorite(favorites, element) {
  */
 selectShow.addEventListener('change', async (event) => {
   var products = await fetchProducts("", "", parseInt(event.target.value));
-  console.log(products.meta);
   products.result = products.result.slice(0, parseInt(event.target.value));
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
+  favoritesCheckBoxes = document.querySelectorAll('.star');
+  setupCheckBoxListeners(favoritesCheckBoxes, favorites);
 });
 
 selectPage.addEventListener('change', async (event) => {
@@ -381,6 +382,8 @@ selectPage.addEventListener('change', async (event) => {
   products.meta.currentPage = parseInt(event.target.value);
   setCurrentProducts(products);
   render(currentProducts, currentPagination);
+  favoritesCheckBoxes = document.querySelectorAll('.star');
+  setupCheckBoxListeners(favoritesCheckBoxes, favorites);
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -432,6 +435,7 @@ selectBrand.addEventListener('change', async (event) => {
   currentPagination.brand = selectedBrand;
   currentPagination.pageSize = oldSize;
   renderProducts(filteredProducts.result);
+  favoritesCheckBoxes = document.querySelectorAll('.star');
   setupCheckBoxListeners(favoritesCheckBoxes, favorites);
 });
 /*
@@ -450,6 +454,7 @@ selectFilterReasonablePrice.addEventListener('click', () => {
   filteredProducts = currentProducts.filter(checkPrice);
   //setCurrentProducts(currentProducts, currentPagination);
   renderProducts(filteredProducts);
+  favoritesCheckBoxes = document.querySelectorAll('.star');
   setupCheckBoxListeners(favoritesCheckBoxes, favorites);
 });
 
@@ -461,6 +466,7 @@ selectFilterRecentlyReleased.addEventListener('click', () => {
   filteredProducts = currentProducts.filter(checkDate);
   //setCurrentProducts(currentProducts, currentPagination);
   renderProducts(filteredProducts);
+  favoritesCheckBoxes = document.querySelectorAll('.star');
   setupCheckBoxListeners(favoritesCheckBoxes, favorites);
 })
 
@@ -483,6 +489,8 @@ selectSort.addEventListener('change', (event) => {
   }
   //setCurrentProducts(currentProducts, currentPagination);
   renderProducts(sortedProducts);
+  favoritesCheckBoxes = document.querySelectorAll('.star');
+  setupCheckBoxListeners(favoritesCheckBoxes, favorites);
 });
 
 /**
