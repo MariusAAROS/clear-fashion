@@ -22,7 +22,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const fs = require('fs');
 
 function getClient() {
-    const uri = "mongodb+srv://Marius_Ortega:VdDquPmKOLXTrY4T@clear-fashion.jdefltc.mongodb.net/?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://Marius_Ortega:eM8X91KacgKMOLJ6@cluster-clear-fashion.osvfb5i.mongodb.net/?retryWrites=true&w=majority";
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
     return client;
 }
@@ -30,7 +30,7 @@ function getClient() {
 app.get('/products/search', async (request, response) => {
   try{
     const client = getClient();
-    const collection = client.db("clear-fashion").collection("products");
+    const collection = client.db("clear-fashion-2").collection("products");
     const brandName = request.query.brand;
 	  const priceRoof = request.query.price;
 	  var limPage = request.query.limit;
@@ -62,7 +62,7 @@ app.get('/products/search', async (request, response) => {
 app.get('/brands', async (request, response) => {
   try{
     const client = getClient();
-    const collection = client.db("clear-fashion").collection("products");
+    const collection = client.db("clear-fashion-2").collection("products");
     const found = await collection.distinct('brand');
     response.send({result: found});
   }
@@ -76,7 +76,7 @@ app.get('/products/:id', async (request, response) => {
     const productId = request.params.id;
     const script = {_id: ObjectId(productId)};
     const client = getClient();
-    const collection = client.db("clear-fashion").collection("products");
+    const collection = client.db("clear-fashion-2").collection("products");
     const found = await collection.find(script).toArray();
     const metadata = {pageSize: found.length};
     response.send({result: found, meta: metadata});

@@ -1,17 +1,3 @@
-/*
-async function getDB(MONGODB_URI, MONGODB_DB_NAME) {
-    const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
-    const db =  client.db(MONGODB_DB_NAME);
-    return db;
-}
-
-const {MongoClient} = require('mongodb');
-const MONGODB_URI = 'mongodb+srv://Marius_Ortega:VdDquPmKOLXTrY4T@clear-fashion?retryWrites=true&writeConcern=majority';
-const MONGODB_DB_NAME = 'clear-fashion';
-
-const db = getDB(MONGODB_URI, MONGODB_DB_NAME);
-*/
-
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const fs = require('fs');
 
@@ -40,10 +26,10 @@ const products = importData();
 console.log("Total items: \n", products.length);
 
 
-const uri = "mongodb+srv://Marius_Ortega:VdDquPmKOLXTrY4T@clear-fashion.jdefltc.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://Marius_Ortega:eM8X91KacgKMOLJ6@cluster-clear-fashion.osvfb5i.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 client.connect(async () => {
-    const collection = client.db("clear-fashion").collection("products");
+    const collection = client.db("clear-fashion-2").collection("products");
     const result = await collection.insertMany(products);
     console.log(result);
   client.close();
